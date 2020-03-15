@@ -1,3 +1,4 @@
+[Exercise 0.4](https://i.imgur.com/8iRxWBl.png)
 ```
 title Exercise 0.4
 Browser->Server:HTTP POST: .../new_notes
