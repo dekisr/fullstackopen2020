@@ -32,8 +32,14 @@ const App = () => {
 
 const Header = ({ course }) => <h1>{course}</h1>
 const Content = ({ parts }) => (
-  parts.map((part) => <p key={part.name}>{part.name} {part.exercises}</p>)
+  // parts.map((part) => <Part name={part.name} exercises={part.exercises} />)
+  <div>
+    <Part name={parts[0].name} exercises={parts[0].exercises} />
+    <Part name={parts[1].name} exercises={parts[1].exercises} />
+    <Part name={parts[2].name} exercises={parts[2].exercises} />
+  </div>
 )
+const Part = ({name, exercises}) => <p>{name} {exercises}</p>
 const Total = ({ exercisesTotal }) => {
   return <p>Number of exercises {exercisesTotal}</p>
 }
