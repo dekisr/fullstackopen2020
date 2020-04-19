@@ -23,24 +23,26 @@ const App = () => {
       <button onClick={() => handleVote(setGood)}>good</button>
       <button onClick={() => handleVote(setNeutral)}>neutral</button>
       <button onClick={() => handleVote(setBad)}>bad</button>
-      <Statistics good={good} neutral={neutral} bad={bad} all={all} />
+      <h2>statistics</h2>
+      {!all ? (
+        <p>No feedback given</p>
+      ) : (
+        <Statistics good={good} neutral={neutral} bad={bad} all={all} />
+      )}
     </div>
   )
 }
 
 const Statistics = ({ good, neutral, bad, all }) => {
   return (
-    <>
-      <h2>statistics</h2>
-      <ul>
-        <li>good: {good}</li>
-        <li>neutral: {neutral}</li>
-        <li>bad: {bad}</li>
-        <li>all: {all}</li>
-        <li>average: {(good * 1 + bad * -1) / all || 0}</li>
-        <li>positive: {(good * 100) / all || 0}%</li>
-      </ul>
-    </>
+    <ul>
+      <li>good: {good}</li>
+      <li>neutral: {neutral}</li>
+      <li>bad: {bad}</li>
+      <li>all: {all}</li>
+      <li>average: {(good * 1 + bad * -1) / all || 0}</li>
+      <li>positive: {(good * 100) / all || 0}%</li>
+    </ul>
   )
 }
 
