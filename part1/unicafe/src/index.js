@@ -20,9 +20,9 @@ const App = () => {
   return (
     <div>
       <h2>give feedback</h2>
-      <button onClick={() => handleVote(setGood)}>good</button>
-      <button onClick={() => handleVote(setNeutral)}>neutral</button>
-      <button onClick={() => handleVote(setBad)}>bad</button>
+      <VoteButton onClick={() => handleVote(setGood)} text="good" />
+      <VoteButton onClick={() => handleVote(setNeutral)} text="neutral" />
+      <VoteButton onClick={() => handleVote(setBad)} text="bad" />
       <h2>statistics</h2>
       {!all ? (
         <p>No feedback given</p>
@@ -33,16 +33,35 @@ const App = () => {
   )
 }
 
+const VoteButton = ({ onClick, text }) => {
+  return <button onClick={onClick}>{text}</button>
+}
+
 const Statistics = ({ good, neutral, bad, all }) => {
   return (
     <ul>
-      <li>good: {good}</li>
+      <Statistic text="good" value={good} />
+      <Statistic text="neutral" value={neutral} />
+      <Statistic text="bad" value={bad} />
+      <Statistic text="all" value={all} />
+      <Statistic text="average" value={(good * 1 + bad * -1) / all} />
+      <Statistic text="positive" value={(good * 100) / all || 0} />
+      {/* <li>good: {good}</li>
       <li>neutral: {neutral}</li>
       <li>bad: {bad}</li>
       <li>all: {all}</li>
       <li>average: {(good * 1 + bad * -1) / all || 0}</li>
-      <li>positive: {(good * 100) / all || 0}%</li>
+      <li>positive: {(good * 100) / all || 0}%</li> */}
     </ul>
+  )
+}
+
+const Statistic = ({ text, value }) => {
+  return (
+    <li>
+      {text}: {value}
+      {text === 'positive' && '%'}
+    </li>
   )
 }
 
