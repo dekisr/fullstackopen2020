@@ -6,18 +6,31 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [all, setAll] = useState(0)
+
+  const handleVote = (fbf) => {
+    // functional updates
+    // https://reactjs.org/docs/hooks-reference.html#functional-updates
+    fbf((c) => c + 1)
+    setAll((a) => a + 1)
+  }
+  // const average = () => (good*1+bad*-1)/all
+  // const positive = () => (good*100)/all
 
   return (
     <div>
       <h2>give feedback</h2>
-      <button onClick={() => setGood((g) => g + 1)}>good</button>
-      <button onClick={() => setNeutral((n) => n + 1)}>neutral</button>
-      <button onClick={() => setBad((b) => b + 1)}>bad</button>
+      <button onClick={() => handleVote(setGood)}>good</button>
+      <button onClick={() => handleVote(setNeutral)}>neutral</button>
+      <button onClick={() => handleVote(setBad)}>bad</button>
       <h2>statistics</h2>
       <ul>
-        <li>good - {good}</li>
-        <li>neutral - {neutral}</li>
-        <li>bad - {bad}</li>
+        <li>good: {good}</li>
+        <li>neutral: {neutral}</li>
+        <li>bad: {bad}</li>
+        <li>all: {all}</li>
+        <li>average: {((good*1+bad*-1)/all) || 0}</li>
+        <li>positive: {((good*100)/all) || 0}%</li>
       </ul>
     </div>
   )
