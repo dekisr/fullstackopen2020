@@ -39,29 +39,34 @@ const VoteButton = ({ onClick, text }) => {
 
 const Statistics = ({ good, neutral, bad, all }) => {
   return (
-    <ul>
-      <Statistic text="good" value={good} />
-      <Statistic text="neutral" value={neutral} />
-      <Statistic text="bad" value={bad} />
-      <Statistic text="all" value={all} />
-      <Statistic text="average" value={(good * 1 + bad * -1) / all} />
-      <Statistic text="positive" value={(good * 100) / all || 0} />
-      {/* <li>good: {good}</li>
-      <li>neutral: {neutral}</li>
-      <li>bad: {bad}</li>
-      <li>all: {all}</li>
-      <li>average: {(good * 1 + bad * -1) / all || 0}</li>
-      <li>positive: {(good * 100) / all || 0}%</li> */}
-    </ul>
+    <table>
+      <tbody>
+        <Statistic text="good" value={good} />
+        <Statistic text="neutral" value={neutral} />
+        <Statistic text="bad" value={bad} />
+        <Statistic text="all" value={all} />
+        <Statistic text="average" value={(good * 1 + bad * -1) / all} />
+        <Statistic text="positive" value={(good * 100) / all || 0} />
+        {/* <li>good: {good}</li>
+        <li>neutral: {neutral}</li>
+        <li>bad: {bad}</li>
+        <li>all: {all}</li>
+        <li>average: {(good * 1 + bad * -1) / all || 0}</li>
+        <li>positive: {(good * 100) / all || 0}%</li> */}
+      </tbody>
+    </table>
   )
 }
 
 const Statistic = ({ text, value }) => {
   return (
-    <li>
-      {text}: {value}
-      {text === 'positive' && '%'}
-    </li>
+    <tr>
+      <td>{text}</td>
+      <td>
+        {value}
+        {text === 'positive' && '%'}
+      </td>
+    </tr>
   )
 }
 
