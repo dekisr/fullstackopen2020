@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
+import './index.css'
 
 const App = () => {
   // save clicks of each button to own state
@@ -18,18 +19,19 @@ const App = () => {
   // const positive = () => (good*100)/all
 
   return (
-    <div>
+    <main>
       <h2>give feedback</h2>
       <VoteButton onClick={() => handleVote(setGood)} text="good" />
       <VoteButton onClick={() => handleVote(setNeutral)} text="neutral" />
       <VoteButton onClick={() => handleVote(setBad)} text="bad" />
+      <hr />
       <h2>statistics</h2>
       {!all ? (
         <p>No feedback given</p>
       ) : (
         <Statistics good={good} neutral={neutral} bad={bad} all={all} />
       )}
-    </div>
+    </main>
   )
 }
 
@@ -61,9 +63,9 @@ const Statistics = ({ good, neutral, bad, all }) => {
 const Statistic = ({ text, value }) => {
   return (
     <tr>
-      <td>{text}</td>
+      <td>{text}:</td>
       <td>
-        {value}
+        <strong>{value}</strong>
         {text === 'positive' && '%'}
       </td>
     </tr>

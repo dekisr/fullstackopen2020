@@ -1,48 +1,70 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
+import './index.css'
 
-const App = (props) => {
+const App = ({ anecdotes }) => {
   const [selected, setSelected] = useState(0)
-  const [points, setPoints] = useState([...props.anecdotes].map(() => 0))
-  const [mostVoted, setMostVoted] = useState(null)
+  const [points, setPoints] = useState([...anecdotes].map(() => 0))
+  const [mostVoted, setMostVoted] = useState(0)
 
-  const handleRandomAnecdote = () => {
-    // prevent to get the same anecdote
-    const random = () => Math.floor(Math.random() * anecdotes.length)
-    let newAnecdote = random()
-    while (newAnecdote === selected) newAnecdote = random()
-    setSelected(newAnecdote)
+  const randomAnecdote = (multiplier) => {
+    return Math.floor(Math.random() * multiplier)
   }
+
   const handleVote = () => {
     const newPoints = [...points]
     newPoints[selected] += 1
     setPoints(newPoints)
-    handleMostVoted()
   }
-  const handleMostVoted = () => {
+  const handleRandomAnecdote = () => {
+    // prevent to get the same anecdote
+    let newAnecdote = randomAnecdote(anecdotes.length)
+    while (newAnecdote === selected)
+      newAnecdote = randomAnecdote(anecdotes.length)
+    setSelected(newAnecdote)
+  }
+
+  useEffect(() => {
+    setSelected(randomAnecdote(anecdotes.length))
+  }, [anecdotes])
+  useEffect(() => {
     const newArray = points.map((item, index) => {
       return { index, points: item }
     })
     newArray.sort((a, b) => b.points - a.points)
-    setMostVoted(newArray[0].index)
-  }
+    return setMostVoted(newArray[0].index)
+  }, [points])
+
   return (
-    <>
+    <main>
       <h2>Anecdote of the day</h2>
-      <p>{props.anecdotes[selected]}</p>
-      <p>has {points[selected]} votes</p>
+      <p>{anecdotes[selected]}</p>
+      <p>
+        has <strong>{points[selected]}</strong> votes
+      </p>
       <button onClick={handleVote}>vote</button>
       <button onClick={handleRandomAnecdote}>next anecdote</button>
-      <h2>Anecdote with most votes</h2>
-      {!mostVoted ? (
-        <p>There are no votes yet</p>
+      <hr />
+      <h2>Anecdote(s) with most votes</h2>
+      {points[mostVoted] === 0 ? (
+        <p>There are no votes yet.</p>
       ) : (
         <>
-          <p>{props.anecdotes[mostVoted]}</p>
-          <p>has {points[mostVoted]}</p>
+          <ul>
+            {anecdotes.map((item, index) => {
+              return (
+                points[index] === points[mostVoted] && (
+                  <li key={item}>“{item}”</li>
+                )
+              )
+            })}
+          </ul>
+          <p>
+            has <strong>{points[mostVoted]}</strong> votes
+          </p>
         </>
       )}
-    </>
+    </main>
   )
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import './index.css'
 
 const App = () => {
   const course = {
@@ -21,11 +22,11 @@ const App = () => {
   }
 
   return (
-    <div>
+    <main>
       <Header course={course.name} />
       <Content parts={course.parts} />
       <Total parts={course.parts} />
-    </div>
+    </main>
   )
 }
 
@@ -40,14 +41,14 @@ const Content = ({ parts }) => (
 )
 const Part = ({ name, exercises }) => (
   <p>
-    {name} {exercises}
+    {name}: <strong>{exercises}</strong>
   </p>
 )
 const Total = ({ parts }) => {
   return (
     <p>
       Number of exercises:{' '}
-      {parts[0].exercises + parts[1].exercises + parts[2].exercises}
+      <strong>{parts[0].exercises + parts[1].exercises + parts[2].exercises}</strong>
     </p>
   )
 }
