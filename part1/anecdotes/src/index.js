@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom'
 const App = (props) => {
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState([...props.anecdotes].map(() => 0))
+  const [mostVoted, setMostVoted] = useState(null)
 
   const handleRandomAnecdote = () => {
     // prevent to get the same anecdote
@@ -16,13 +17,31 @@ const App = (props) => {
     const newPoints = [...points]
     newPoints[selected] += 1
     setPoints(newPoints)
+    handleMostVoted()
+  }
+  const handleMostVoted = () => {
+    const newArray = points.map((item, index) => {
+      return { index, points: item }
+    })
+    newArray.sort((a, b) => b.points - a.points)
+    setMostVoted(newArray[0].index)
   }
   return (
     <>
-      <div>{props.anecdotes[selected]} </div>
-      <div>has {points[selected]} votes</div>
+      <h2>Anecdote of the day</h2>
+      <p>{props.anecdotes[selected]}</p>
+      <p>has {points[selected]} votes</p>
       <button onClick={handleVote}>vote</button>
       <button onClick={handleRandomAnecdote}>next anecdote</button>
+      <h2>Anecdote with most votes</h2>
+      {!mostVoted ? (
+        <p>There are no votes yet</p>
+      ) : (
+        <>
+          <p>{props.anecdotes[mostVoted]}</p>
+          <p>has {points[mostVoted]}</p>
+        </>
+      )}
     </>
   )
 }
