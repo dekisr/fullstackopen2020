@@ -56,7 +56,9 @@ const Total = ({ parts }) => {
     <p>
       Number of exercises:{' '}
       <strong>
-        {parts[0].exercises + parts[1].exercises + parts[2].exercises}
+        {parts.reduce((acc, cur) => {
+          return acc + cur.exercises
+        }, 0)}
       </strong>
     </p>
   )
