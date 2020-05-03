@@ -24,6 +24,10 @@ const App = () => {
     search ? setFilteredCts(filter) : setFilteredCts([])
   }, [countries, search])
 
+  const handleCountry = (country) => {
+    setFilteredCts([country])
+  }
+
   const handleSearch = (event) => {
     setSearch(event.target.value)
   }
@@ -36,7 +40,10 @@ const App = () => {
         {filteredCts.length < 10 &&
           filteredCts.length > 1 &&
           filteredCts.map((country) => (
-            <li key={country.name}>{country.name}</li>
+            <li key={country.name}>
+              {country.name}{' '}
+              <button onClick={() => handleCountry(country) }>Show</button>
+            </li>
           ))}
         {filteredCts.length > 10 && (
           <li>Too many matches, specify another filter</li>
