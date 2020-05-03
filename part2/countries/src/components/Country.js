@@ -26,12 +26,23 @@ const Country = ({ country }) => {
   return (
     <>
       <h1>{country.name}</h1>
-      <p>capital {country.capital}</p>
-      <p>population {country.population}</p>
-      <h2>languages</h2>
+      <p>
+        capital: <strong>{country.capital}</strong>
+      </p>
+      <p>
+        population: <strong>{country.population}</strong>
+      </p>
+      <h2>
+        ⦿ languages{' '}
+        <span role="img" aria-label="Speech Baloon">
+          💬
+        </span>
+      </h2>
       <ul>
         {country.languages.map((language) => (
-          <li key={language.name}>{language.name}</li>
+          <li key={language.name}>
+            <strong>{language.name}</strong>
+          </li>
         ))}
       </ul>
       <div>
@@ -41,19 +52,24 @@ const Country = ({ country }) => {
           style={{ width: '7rem', marginTop: '0.3rem' }}
         />
       </div>
-      <h2>Weather in {country.capital}</h2>
+      <h2>
+        ⦿ weather in {country.capital}{' '}
+        <span role="img" aria-label="Planet Earth">
+          🌍
+        </span>
+      </h2>
       {weather && !weather.error ? (
         <div>
-          <p>
-            <strong>temperature:</strong> {weather.current.temperature} Celcius
-          </p>
           <img
             src={weather.current.weather_icons[0]}
             alt={`Weather Icon for ${country.capital}`}
           />
           <p>
-            <strong>wind:</strong> {weather.current.wind_speed} mph direction{' '}
-            {weather.current.wind_dir}
+            temperature: <strong>{weather.current.temperature}</strong> Celcius
+          </p>
+          <p>
+            wind: <strong>{weather.current.wind_speed}</strong> mph,{' '}
+            <strong>{weather.current.wind_dir}</strong> direction
           </p>
         </div>
       ) : weather && weather.error ? (

@@ -36,7 +36,7 @@ const App = () => {
 
   return (
     <main>
-      find countries{' '}
+      <strong>find countries</strong>:{' '}
       <input type="text" value={search} onChange={handleSearch} />
       <ul>
         {filteredCts.length < 10 &&
