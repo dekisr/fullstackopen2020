@@ -15,6 +15,7 @@ const App = () => {
     // fetch('https://restcountries.eu/rest/v2/all')
     //   .then((response) => response.json())
     //   .then((data) => setCountries(data))
+    return () => setCountries([])
   }, [])
 
   useEffect(() => {
@@ -22,6 +23,7 @@ const App = () => {
       country.name.toLowerCase().includes(search.toLowerCase())
     )
     search ? setFilteredCts(filter) : setFilteredCts([])
+    return () => setFilteredCts([])
   }, [countries, search])
 
   const handleCountry = (country) => {
