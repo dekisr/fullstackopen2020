@@ -22,7 +22,11 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    const newPerson = { name: newName, number: newNumber }
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+      id: persons.length + 1,
+    }
     setNewName('')
     setNewNumber('')
     setFilter('')
