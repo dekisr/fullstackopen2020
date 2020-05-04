@@ -84,12 +84,15 @@ const App = () => {
                 // )
                 setNotification({
                   type: 'error',
-                  message: `Information of ${newPerson.name} has already been removed from server`
+                  message: `Information of ${newPerson.name} `
+                    +`has already been removed from server`
                 })
                 setTimeout(() => {
                   setNotification(null)
                 }, 5000)
-                setPersons((persons) => persons.filter((person) => person.id !== getId()))
+                setPersons((persons) =>
+                  persons.filter((person) => person.id !== getId())
+                )
               })
       : personService
           .add(newPerson)
@@ -112,18 +115,29 @@ const App = () => {
   }
 
   const removePerson = (id) => {
-    const person = persons.find((person) => person.id === id)
+    const personToDelete = persons.find((person) => person.id === id)
     return (
-      window.confirm(`Delete ${person.name}?`) &&
+      window.confirm(`Delete ${personToDelete.name}?`) &&
       personService
         .remove(id)
         .then(() =>
           setPersons((persons) => persons.filter((person) => person.id !== id))
         )
-        .catch((error) =>
-          alert(`Failed while removing the person.`
-          +`\nERROR -> ${error.message}.`)
-        )
+        .catch((error) => {
+          // alert(`Failed while removing the person.`
+          // +`\nERROR -> ${error.message}.`)
+          setNotification({
+            type: 'error',
+            message: `Information of ${personToDelete.name} `
+              +`has already been removed from server`
+          })
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+          setPersons((persons) =>
+            persons.filter((person) => person.id !== id)
+          )
+        })
     )
   }
 
