@@ -51,6 +51,22 @@ const App = () => {
           )
   }
 
+  const removePerson = (id) => {
+    const person = persons.find(person => person.id === id)
+    return window.confirm(`Delete ${person.name}?`) &&
+      personService
+        .remove(id)
+        .then(() =>
+          setPersons((persons) =>
+            persons.filter((person) => person.id !== id))
+        )
+        .catch((error) =>
+          alert(
+            `Failed while removing the person.\nERROR -> ${error.message}.`
+          )
+        )
+  }
+
   const handleChange = ({ target: { value } }, type) => {
     type === 'name'
       ? setNewName(value)
@@ -75,7 +91,7 @@ const App = () => {
         handleChange={handleChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} removePerson={removePerson} filter={filter} />
     </div>
   )
 }

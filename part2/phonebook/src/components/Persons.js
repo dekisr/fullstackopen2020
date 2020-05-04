@@ -1,20 +1,13 @@
 import React from 'react'
+import Person from './Person'
 
-const Person = ({ person }) => {
-  return (
-    <li>
-      {person.name} {person.number}
-    </li>
-  )
-}
-
-const Persons = ({ persons, filter }) => {
+const Persons = ({ persons, filter, removePerson }) => {
   return (
     <ul>
       {persons
         .filter((person) => person.name.toLowerCase().includes(filter))
         .map((person) => (
-          <Person key={person.name} person={person} />
+          <Person key={person.name} person={person} removePerson={removePerson} />
         ))}
     </ul>
   )
