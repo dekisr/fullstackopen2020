@@ -146,7 +146,7 @@ const App = () => {
       ? setNewName(value)
       : type === 'number'
       ? setNewNumber(value)
-      : setFilter(value.toLowerCase())
+      : setFilter(value)
   }
   // const handleNameChange = (event) => {
   //   console.log('Name Input', event.target.value)
