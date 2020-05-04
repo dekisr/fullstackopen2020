@@ -29,6 +29,11 @@
       "name": "Arto and Hellas Again",
       "number": "9876543210",
       "id": 6
+    },
+    {
+      "name": "Alex",
+      "number": "000",
+      "id": 7
     }
   ]
 }

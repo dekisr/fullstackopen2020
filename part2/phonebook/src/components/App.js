@@ -4,12 +4,14 @@ import personService from '../services/persons'
 import Filter from './Filter'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
+import Notification from './Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     // fetch('http://localhost:3001/persons')
@@ -63,6 +65,15 @@ const App = () => {
               .then((resPerson) => setPersons((persons) =>
                 persons.map((person) =>
                   person.id === resPerson.id ? resPerson : person)))
+              .then(() => {
+                setNotification({
+                  type: 'success',
+                  message: `Updated ${newPerson.name}’s number`
+                })
+                setTimeout(() => {
+                  setNotification(null)
+                }, 5000)
+              })
               .catch((error) =>
                 alert(
                   `Failed while updating the number.`
@@ -72,6 +83,15 @@ const App = () => {
       : personService
           .add(newPerson)
           .then((person) => setPersons((persons) => persons.concat(person)))
+          .then(() => {
+            setNotification({
+              type: 'success',
+              message: `Added ${newPerson.name}`
+            })
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
           .catch((error) =>
             alert(
               `Failed while adding new person to the server.`
@@ -110,6 +130,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification} />
       <h2>Phonebook</h2>
       <Filter filter={filter} handleChange={handleChange} />
       <h3>add a new</h3>
