@@ -74,12 +74,20 @@ const App = () => {
                   setNotification(null)
                 }, 5000)
               })
-              .catch((error) =>
-                alert(
-                  `Failed while updating the number.`
-                  +`\nERROR -> ${error.message}.`
-                )
-              )
+              .catch((error) => {
+                // alert(
+                //   `Failed while updating the number.`
+                //   +`\nERROR -> ${error.message}.`
+                // )
+                setNotification({
+                  type: 'error',
+                  message: `Information of ${newPerson.name} has already been removed from server`
+                })
+                setTimeout(() => {
+                  setNotification(null)
+                }, 5000)
+                setPersons((persons) => persons.filter((person) => person.id !== getId()))
+              })
       : personService
           .add(newPerson)
           .then((person) => setPersons((persons) => persons.concat(person)))
