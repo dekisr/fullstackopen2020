@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from '../services/persons'
 
 import Filter from './Filter'
 import PersonForm from './PersonForm'
@@ -15,9 +15,14 @@ const App = () => {
     // fetch('http://localhost:3001/persons')
     //   .then((response) => response.json())
     //   .then((data) => setPersons(data))
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => setPersons(response.data))
+    personService
+      .getAll()
+      .then((persons) => setPersons(persons))
+      .catch((error) =>
+        alert(
+          `Failed while fetching data from the server.\nERROR -> ${error.message}.`
+        )
+      )
   }, [])
 
   const addPerson = (event) => {
@@ -25,7 +30,7 @@ const App = () => {
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      // id: persons.length + 1,
     }
     setNewName('')
     setNewNumber('')
@@ -36,12 +41,14 @@ const App = () => {
 
     return check
       ? alert(`${newPerson.name} is already added to phonebook`)
-      : axios
-          .post('http://localhost:3001/persons', newPerson)
-          .then((response) => {
-            setPersons((persons) => persons.concat(response.data))
-          })
-          .catch((error) => console.warn('ERROR ->', error))
+      : personService
+          .add(newPerson)
+          .then((person) => setPersons((persons) => persons.concat(person)))
+          .catch((error) =>
+            alert(
+              `Failed while adding new person to the server.\nERROR -> ${error.message}.`
+            )
+          )
   }
 
   const handleChange = ({ target: { value } }, type) => {
