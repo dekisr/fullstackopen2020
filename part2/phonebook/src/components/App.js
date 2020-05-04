@@ -48,7 +48,7 @@ const App = () => {
       .includes(newPerson.number)
     const getId = () => {
       const samePerson = persons
-        .find((person) => person.name === newPerson.name)
+        .find((person) => person.name.toLowerCase() === newPerson.name.toLowerCase())
       return samePerson.id
     }
 
@@ -64,7 +64,10 @@ const App = () => {
               .update(getId(), newPerson)
               .then((resPerson) => setPersons((persons) =>
                 persons.map((person) =>
-                  person.id === resPerson.id ? resPerson : person)))
+                  person.id === resPerson.id
+                  ? { ...person, number: resPerson.number }
+                  : person
+                )))
               .then(() => {
                 setNotification({
                   type: 'success',
