@@ -137,20 +137,22 @@ const App = () => {
   // }
 
   return (
-    <div>
+    <main>
       <Notification notification={notification} />
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
       <Filter filter={filter} handleChange={handleChange} />
-      <h3>add a new</h3>
+      <hr />
+      <h2>add a new</h2>
       <PersonForm
         addPerson={addPerson}
         newName={newName}
         newNumber={newNumber}
         handleChange={handleChange}
       />
+      <hr />
       <h3>Numbers</h3>
       <Persons persons={persons} removePerson={removePerson} filter={filter} />
-    </div>
+    </main>
   )
 }
 
