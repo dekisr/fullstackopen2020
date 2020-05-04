@@ -20,7 +20,8 @@ const App = () => {
       .then((persons) => setPersons(persons))
       .catch((error) =>
         alert(
-          `Failed while fetching data from the server.\nERROR -> ${error.message}.`
+          `Failed while fetching data from the server.`
+          +`\nERROR -> ${error.message}.`
         )
       )
   }, [])
@@ -32,39 +33,67 @@ const App = () => {
       number: newNumber,
       // id: persons.length + 1,
     }
+
     setNewName('')
     setNewNumber('')
     setFilter('')
-    const check = persons
+
+    const checkName = persons
       .map((person) => person.name.toLowerCase())
       .includes(newPerson.name.toLowerCase())
+    const checkNumber = persons
+      .map((person) => person.number)
+      .includes(newPerson.number)
+    const getId = () => {
+      const samePerson = persons
+        .find((person) => person.name === newPerson.name)
+      return samePerson.id
+    }
 
-    return check
-      ? alert(`${newPerson.name} is already added to phonebook`)
+    return checkName && checkNumber
+      ? alert(
+          `${newPerson.name} (${newPerson.number}) `
+          +`is already added to phonebook`
+        )
+      : checkName
+      ? window.confirm(`${newPerson.name} is already added to phonebook, `
+          +`replace the old number with a new one?`) &&
+            personService
+              .update(getId(), newPerson)
+              .then((resPerson) => setPersons((persons) =>
+                persons.map((person) =>
+                  person.id === resPerson.id ? resPerson : person)))
+              .catch((error) =>
+                alert(
+                  `Failed while updating the number.`
+                  +`\nERROR -> ${error.message}.`
+                )
+              )
       : personService
           .add(newPerson)
           .then((person) => setPersons((persons) => persons.concat(person)))
           .catch((error) =>
             alert(
-              `Failed while adding new person to the server.\nERROR -> ${error.message}.`
+              `Failed while adding new person to the server.`
+              +`\nERROR -> ${error.message}.`
             )
           )
   }
 
   const removePerson = (id) => {
-    const person = persons.find(person => person.id === id)
-    return window.confirm(`Delete ${person.name}?`) &&
+    const person = persons.find((person) => person.id === id)
+    return (
+      window.confirm(`Delete ${person.name}?`) &&
       personService
         .remove(id)
         .then(() =>
-          setPersons((persons) =>
-            persons.filter((person) => person.id !== id))
+          setPersons((persons) => persons.filter((person) => person.id !== id))
         )
         .catch((error) =>
-          alert(
-            `Failed while removing the person.\nERROR -> ${error.message}.`
-          )
+          alert(`Failed while removing the person.`
+          +`\nERROR -> ${error.message}.`)
         )
+    )
   }
 
   const handleChange = ({ target: { value } }, type) => {
