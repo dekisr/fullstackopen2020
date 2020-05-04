@@ -36,7 +36,12 @@ const App = () => {
 
     return check
       ? alert(`${newPerson.name} is already added to phonebook`)
-      : setPersons((persons) => persons.concat(newPerson))
+      : axios
+          .post('http://localhost:3001/persons', newPerson)
+          .then((response) => {
+            setPersons((persons) => persons.concat(response.data))
+          })
+          .catch((error) => console.warn('ERROR ->', error))
   }
 
   const handleChange = ({ target: { value } }, type) => {
