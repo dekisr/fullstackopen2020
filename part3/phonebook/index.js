@@ -57,15 +57,20 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
+  const names = persons.map((person) => person.name)
   if (!body.name || !body.number) {
-    return response.status(404).json({
+    return response.status(400).json({
       error: 'information missing',
+    })
+  } else if (names.includes(body.name.toString())) {
+    return response.status(400).json({
+      error: 'name must be unique',
     })
   }
   const person = {
     name: body.name.toString(),
     number: body.number.toString(),
-    id: Math.floor(Math.random()*Number.MAX_SAFE_INTEGER)
+    id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
   }
   persons = persons.concat(person)
   response.json(person)
