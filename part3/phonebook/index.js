@@ -29,6 +29,7 @@ let persons = [
 ]
 
 const app = express()
+app.use(express.json())
 
 app.get('/', (request, response) => {
   response.send('<h1>persons api</h1>')
@@ -45,15 +46,29 @@ app.get('/info', (request, response) => {
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const person = persons.find((person) => person.id === id)
-  !person
-    ? response.status(404).end()
-    : response.json(person)
+  !person ? response.status(404).end() : response.json(person)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
+  persons = persons.filter((person) => person.id !== id)
   response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  if (!body.name || !body.number) {
+    return response.status(404).json({
+      error: 'information missing',
+    })
+  }
+  const person = {
+    name: body.name.toString(),
+    number: body.number.toString(),
+    id: Math.floor(Math.random()*Number.MAX_SAFE_INTEGER)
+  }
+  persons = persons.concat(person)
+  response.json(person)
 })
 
 const port = 3001
