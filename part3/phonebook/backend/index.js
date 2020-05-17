@@ -34,11 +34,17 @@ app.use(express.json())
 morgan.token('request-body', (request, response) => {
   return JSON.stringify(request.body)
 })
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :request-body'))
+app.use(
+  morgan(
+    ':method :url :status :res[content-length] - :response-time ms :request-body'
+  )
+)
+app.use(express.static('build'))
 
-app.get('/', (request, response) => {
-  response.send('<h1>persons api</h1>')
-})
+// app.get('/', (request, response) => {
+//   response.send('<h1>persons api</h1>')
+// })
+
 app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
@@ -56,8 +62,9 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
+  const person = persons.find((person) => person.id === id)
   persons = persons.filter((person) => person.id !== id)
-  response.status(204).end()
+  !person ? response.status(404).end() : response.status(204).end()
 })
 
 app.post('/api/persons', (request, response) => {
@@ -81,6 +88,6 @@ app.post('/api/persons', (request, response) => {
   response.json(person)
 })
 
-const port = 3001
-app.listen(port)
-console.log(`Server running on port ${port}`)
+const PORT = process.env.PORT || 3001
+app.listen(PORT)
+console.log(`Server running on port ${PORT}`)

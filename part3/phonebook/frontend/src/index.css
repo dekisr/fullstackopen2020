@@ -1,0 +1,95 @@
+/* Override reset for Full Stack Open - Part2 phonebook */
+
+* {
+  margin: 0;
+  padding: 0.125rem;
+  font-size: 100%;
+  font-family: sans-serif;
+  color: dimgrey;
+}
+
+main {
+  padding: 2rem;
+}
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.0625rem;
+  border: 0;
+  background-color: gainsboro;
+}
+
+h1 {
+  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
+  font-size: 2rem;
+}
+h2 {
+  margin-top: 0.3125rem;
+  margin-bottom: 0.3125rem;
+  font-size: 1.5rem;
+}
+
+li {
+  padding: 0.375rem;
+  list-style-position: inside;
+  list-style-type: square;
+}
+
+button {
+  margin: 0.125rem;
+  padding: 0.375rem;
+  border: none;
+  font-size: 0.875rem;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 400ms ease;
+  color: snow;
+  background-color: dimgrey;
+}
+button:hover {
+  outline: 0.0625rem solid snow;
+  outline-offset: -0.125rem;
+}
+button:active {
+  outline-offset: -0.1875rem;
+  background-color: dimgrey;
+}
+
+.delete {
+  position: relative;
+  top: -0.125rem;
+  margin-left: 0.5rem;
+  padding: 0.188rem;
+  font-size: 0.75rem;
+  text-transform: lowercase;
+  background-color: tomato;
+}
+.delete:hover,
+.delete:active {
+  outline: none;
+  background-color: firebrick;
+}
+.delete:active {
+  text-decoration: line-through;
+}
+
+.notification {
+font-size: 1.25rem;
+border-style: solid;
+padding: 0.75rem;
+margin-bottom: 1rem;
+} 
+
+.error {
+  color: tomato;
+  background-color: ivory;
+}
+
+.success {
+  color: lightgreen;
+  background-color: mintcream;
+}
