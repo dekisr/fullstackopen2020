@@ -69,20 +69,25 @@ app.get('/info', (request, response) => {
     `)
   })
 })
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   // const id = Number(request.params.id)
   // const person = Person.find((person) => person.id === id)
   // !person ? response.status(404).end() : response.json(person)
-  Person.findById(request.params.id).then((person) => {
-    response.json(person)
-  })
+  Person.findById(request.params.id)
+    .then((person) => {
+      !person ? response.status(404).end() : response.json(person)
+    })
+    .catch((error) => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find((person) => person.id === id)
-  persons = persons.filter((person) => person.id !== id)
-  !person ? response.status(404).end() : response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+  // const id = Number(request.params.id)
+  // const person = persons.find((person) => person.id === id)
+  // persons = persons.filter((person) => person.id !== id)
+  // !person ? response.status(404).end() : response.status(204).end()
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => response.status(204).end())
+    .catch((error) => next(error))
 })
 
 app.post('/api/persons', (request, response) => {

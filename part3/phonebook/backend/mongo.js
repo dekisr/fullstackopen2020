@@ -2,9 +2,9 @@ const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
   console.group()
-  console.log('Please provide the correct arguments:')
-  console.log('- List all entries: node mongo.js <password>')
-  console.log('- Add person: node mongo.js <passowrd> <name> <number>')
+    console.log('Please provide the correct arguments:')
+    console.log('- List all entries: node mongo.js <password>')
+    console.log('- Add person: node mongo.js <passowrd> <name> <number>')
   console.groupEnd()
   process.exit(1)
 }
