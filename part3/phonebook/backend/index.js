@@ -50,6 +50,7 @@ app.use(express.static('build'))
 //   response.send('<h1>persons api</h1>')
 // })
 
+// already done
 app.get('/api/persons', (request, response, next) => {
   Person.find({})
     .then((persons) => {
