@@ -40,64 +40,62 @@ const App = () => {
     setNewNumber('')
     setFilter('')
 
-    const checkName = persons
-      .map((person) => person.name.toLowerCase())
-      .includes(newPerson.name.toLowerCase())
-    const checkNumber = persons
-      .map((person) => person.number)
-      .includes(newPerson.number)
+    const checkPerson = persons
+      .find((person) =>
+        person.name.toLowerCase() === newPerson.name.toLowerCase())
     const getId = () => {
       const samePerson = persons
-        .find((person) => person.name.toLowerCase() === newPerson.name.toLowerCase())
+        .find((person) =>
+          person.name.toLowerCase() === newPerson.name.toLowerCase())
       return samePerson.id
     }
 
-    return checkName && checkNumber
+    return checkPerson && checkPerson.number === newPerson.number
       ? alert(
           `${newPerson.name} (${newPerson.number}) `
           +`is already added to phonebook`
         )
-      : checkName
+      : checkPerson
       ? window.confirm(`${newPerson.name} is already added to phonebook, `
           +`replace the old number with a new one?`) &&
-            // personService
-            //   .update(getId(), newPerson)
-            //   .then((resPerson) => setPersons((persons) =>
-            //     persons.map((person) =>
-            //       person.id === resPerson.id
-            //       ? { ...person, number: resPerson.number }
-            //       : person
-            //     )))
-            //   .then(() => {
-            //     setNotification({
-            //       type: 'success',
-            //       message: `Updated ${newPerson.name}’s number`
-            //     })
-            //     setTimeout(() => {
-            //       setNotification(null)
-            //     }, 5000)
-            //   })
-            //   .catch((error) => {
-            //     // alert(
-            //     //   `Failed while updating the number.`
-            //     //   +`\nERROR -> ${error.message}.`
-            //     // )
-            //     setNotification({
-            //       type: 'error',
-            //       message: `Information of ${newPerson.name} `
-            //         +`has already been removed from server`
-            //     })
-            //     setTimeout(() => {
-            //       setNotification(null)
-            //     }, 5000)
-            //     setPersons((persons) =>
-            //       persons.filter((person) => person.id !== getId())
-            //     )
-            //   })
-            setNotification({
-              type: 'error',
-              message: `Updated function not working...`
-            })
+            personService
+              .update(getId(), newPerson)
+              .then((resPerson) => setPersons((persons) =>
+                persons.map((person) =>
+                  person.id === resPerson.id
+                  ? { ...person, number: resPerson.number }
+                  : person
+                )))
+              .then(() => {
+                setNotification({
+                  type: 'success',
+                  message: `Updated ${newPerson.name}’s number`
+                })
+                setTimeout(() => {
+                  setNotification(null)
+                }, 5000)
+              })
+              .catch((error) => {
+                // alert(
+                //   `Failed while updating the number.`
+                //   +`\nERROR -> ${error.message}.`
+                // )
+                setNotification({
+                  type: 'error',
+                  message: `Information of ${newPerson.name} `
+                    +`has already been removed from server`
+                })
+                setTimeout(() => {
+                  setNotification(null)
+                }, 5000)
+                setPersons((persons) =>
+                  persons.filter((person) => person.id !== getId())
+                )
+              })
+            // setNotification({
+            //   type: 'error',
+            //   message: `Updated function not working...`
+            // })
       : personService
           .add(newPerson)
           .then((person) => setPersons((persons) => persons.concat(person)))

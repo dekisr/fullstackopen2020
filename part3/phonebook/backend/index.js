@@ -67,6 +67,7 @@ app.get('/info', (request, response) => {
     })
     .catch((error) => next(error))
 })
+
 app.get('/api/persons/:id', (request, response, next) => {
   // const id = Number(request.params.id)
   // const person = Person.find((person) => person.id === id)
@@ -77,7 +78,12 @@ app.get('/api/persons/:id', (request, response, next) => {
     })
     .catch((error) => next(error))
 })
-
+app.put('/api/persons/:id', (request, response, next) => {
+  const number = request.body.number
+  Person.findByIdAndUpdate(request.params.id, { number }, { new: true })
+    .then((updatedPerson) => response.json(updatedPerson))
+    .catch((error) => next(error))
+})
 app.delete('/api/persons/:id', (request, response, next) => {
   // const id = Number(request.params.id)
   // const person = persons.find((person) => person.id === id)
