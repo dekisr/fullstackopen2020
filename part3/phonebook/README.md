@@ -6,11 +6,13 @@
 > $ `npm install`  
 > $ `npm start`
 ## For deployment scripts at Heroku (with Heroku CLI):
+If you have cloned this entire repository, it's better to copy this phonebook directory to another location before nesting git repos.
 > $ `npm install --prefix ./frontend`  
 > $ `cd backend`  
 > $ `git init`  
 > $ `heroku create`  
 > $ `npm run deploy:full`  
+> $ `heroku config:set <your_db_uri>`  
 > $ `heroku open`
 ## Online project:
 > https://fsopen-part3-phonebook.herokuapp.com  
