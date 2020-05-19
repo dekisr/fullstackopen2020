@@ -20,12 +20,20 @@ const App = () => {
     personService
       .getAll()
       .then((persons) => setPersons(persons))
-      .catch((error) =>
-        alert(
-          `Failed while fetching data from the server.`
-          +`\nERROR -> ${error.message}.`
-        )
-      )
+      .catch((error) => {
+        // alert(
+        //   `Failed while fetching data from the server.` +
+        //     `\nERROR -> ${error.message}.`
+        // )
+        console.log(error)
+        setNotification({
+          type: 'error',
+          message: 'Failed while fetching data from the server.',
+        })
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+      })
   }, [])
 
   const addPerson = (event) => {
@@ -40,80 +48,91 @@ const App = () => {
     setNewNumber('')
     setFilter('')
 
-    const checkPerson = persons
-      .find((person) =>
-        person.name.toLowerCase() === newPerson.name.toLowerCase())
+    const checkPerson = persons.find(
+      (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+    )
     const getId = () => {
-      const samePerson = persons
-        .find((person) =>
-          person.name.toLowerCase() === newPerson.name.toLowerCase())
+      const samePerson = persons.find(
+        (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+      )
       return samePerson.id
     }
 
     return checkPerson && checkPerson.number === newPerson.number
       ? alert(
-          `${newPerson.name} (${newPerson.number}) `
-          +`is already added to phonebook`
+          `${newPerson.name} (${newPerson.number}) ` +
+            `is already added to phonebook`
         )
       : checkPerson
-      ? window.confirm(`${newPerson.name} is already added to phonebook, `
-          +`replace the old number with a new one?`) &&
-            personService
-              .update(getId(), newPerson)
-              .then((resPerson) => setPersons((persons) =>
-                persons.map((person) =>
-                  person.id === resPerson.id
+      ? window.confirm(
+          `${newPerson.name} is already added to phonebook, ` +
+            `replace the old number with a new one?`
+        ) &&
+        personService
+          .update(getId(), newPerson)
+          .then((resPerson) =>
+            setPersons((persons) =>
+              persons.map((person) =>
+                person.id === resPerson.id
                   ? { ...person, number: resPerson.number }
                   : person
-                )))
-              .then(() => {
-                setNotification({
-                  type: 'success',
-                  message: `Updated ${newPerson.name}’s number`
-                })
-                setTimeout(() => {
-                  setNotification(null)
-                }, 5000)
-              })
-              .catch((error) => {
-                // alert(
-                //   `Failed while updating the number.`
-                //   +`\nERROR -> ${error.message}.`
-                // )
-                setNotification({
-                  type: 'error',
-                  message: `Information of ${newPerson.name} `
-                    +`has already been removed from server`
-                })
-                setTimeout(() => {
-                  setNotification(null)
-                }, 5000)
-                setPersons((persons) =>
-                  persons.filter((person) => person.id !== getId())
-                )
-              })
-            // setNotification({
-            //   type: 'error',
-            //   message: `Updated function not working...`
-            // })
-      : personService
-          .add(newPerson)
-          .then((person) => setPersons((persons) => persons.concat(person)))
+              )
+            )
+          )
           .then(() => {
             setNotification({
               type: 'success',
-              message: `Added ${newPerson.name}`
+              message: `Updated ${newPerson.name}’s number`,
             })
             setTimeout(() => {
               setNotification(null)
             }, 5000)
           })
-          .catch((error) =>
-            alert(
-              `Failed while adding new person to the server.`
-              +`\nERROR -> ${error.message}.`
-            )
-          )
+          .catch((error) => {
+            // alert(
+            //   `Failed while updating the number.`
+            //   +`\nERROR -> ${error.message}.`
+            // )
+            console.log(error.response.data.error)
+            setNotification({
+              type: 'error',
+              message: error.response.data.error,
+            })
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
+      : // setNotification({
+        //   type: 'error',
+        //   message: `Updated function not working...`
+        // })
+        personService
+          .add(newPerson)
+          .then((person) => setPersons((persons) => persons.concat(person)))
+          .then(() => {
+            setNotification({
+              type: 'success',
+              message: `Added ${newPerson.name}`,
+            })
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
+          .catch((error) => {
+            // alert(
+            //   `Failed while adding new person to the server.`
+            //   +`\nERROR -> ${error.message}.`
+            // )
+            // console.log('hey')
+            console.log(error.response.data.error)
+            setNotification({
+              type: 'error',
+              message: error.response.data.error,
+            })
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
   }
 
   const removePerson = (id) => {
@@ -125,20 +144,27 @@ const App = () => {
         .then(() =>
           setPersons((persons) => persons.filter((person) => person.id !== id))
         )
-        .catch((error) => {
-          // alert(`Failed while removing the person.`
-          // +`\nERROR -> ${error.message}.`)
+        .then(() => {
           setNotification({
-            type: 'error',
-            message: `Information of ${personToDelete.name} `
-              +`has already been removed from server`
+            type: 'success',
+            message: `Removed ${personToDelete.name}`,
           })
           setTimeout(() => {
             setNotification(null)
           }, 5000)
-          setPersons((persons) =>
-            persons.filter((person) => person.id !== id)
-          )
+        })
+        .catch((error) => {
+          // alert(`Failed while removing the person.`
+          // +`\nERROR -> ${error.message}.`)
+          console.log(error.response.data.error)
+          setNotification({
+            type: 'error',
+            message: error.response.data.error,
+          })
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+          setPersons((persons) => persons.filter((person) => person.id !== id))
         })
     )
   }
