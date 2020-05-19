@@ -36,7 +36,7 @@ const Person = require('./models/person')
 const app = express()
 app.use(cors())
 app.use(express.json())
-morgan.token('request-body', (request, response) => {
+morgan.token('request-body', (request) => {
   return JSON.stringify(request.body)
 })
 app.use(
@@ -58,7 +58,7 @@ app.get('/api/persons', (request, response, next) => {
     })
     .catch((error) => next(error))
 })
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
   Person.countDocuments({})
     .then((result) => {
       response.send(`
@@ -95,7 +95,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
   // persons = persons.filter((person) => person.id !== id)
   // !person ? response.status(404).end() : response.status(204).end()
   Person.findByIdAndRemove(request.params.id)
-    .then((result) => response.status(204).end())
+    .then(() => response.status(204).end())
     .catch((error) => next(error))
 })
 
