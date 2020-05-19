@@ -95,7 +95,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch((error) => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   // const body = request.body
   // const names = persons.map((person) => person.name)
   // if (!body.name || !body.number) {
@@ -115,25 +115,29 @@ app.post('/api/persons', (request, response) => {
   // persons = persons.concat(person)
   // response.json(person)
   const body = request.body
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error: 'information missing',
-    })
-  }
+  // if (!body.name || !body.number) {
+  //   return response.status(400).json({
+  //     error: 'information missing',
+  //   })
+  // }
   const person = new Person({
     name: body.name.toString(),
     number: body.number.toString(),
   })
-  Person.find({ name: body.name })
-    .then((result) => {
-      return result.length
-        ? response.status(400).json({
-            error: 'name must be unique',
-          })
-        : person.save().then((savedPerson) => {
-            response.json(savedPerson)
-          })
-    })
+  // Person.find({ name: body.name })
+  //   .then((result) => {
+  //     return result.length
+  //       ? response.status(400).json({
+  //           error: 'name must be unique',
+  //         })
+  //       : person.save().then((savedPerson) => {
+  //           response.json(savedPerson)
+  //         })
+  //   })
+  person
+    .save()
+    .then((savedPerson) => savedPerson.toJSON())
+    .then((savedAndFormattedPerson) => response.json(savedAndFormattedPerson))
     .catch((error) => next(error))
 })
 
@@ -141,9 +145,10 @@ const errorHandler = (error, request, response, next) => {
   console.error('Error', error.message)
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } else {
-    next(error)
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
+  next(error)
 }
 app.use(errorHandler)
 const PORT = process.env.PORT || 3001
