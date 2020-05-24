@@ -30,9 +30,29 @@ const mostBlogs = (blogs) => {
   return countBlogs.sort((a, b) => b.blogs - a.blogs)[0]
 }
 
+const mostLikes = (blogs) => {
+  const authors = blogs
+    .map((blog) => blog.author)
+    .filter((author, index, array) => {
+      return array.indexOf(author) === index
+    })
+  const countLikes = authors.map((author) => {
+    return {
+      author,
+      likes: blogs
+        .filter((blog) => blog.author === author)
+        .reduce((acc, blog) => {
+          return acc + blog.likes
+        }, 0),
+    }
+  })
+  return countLikes.sort((a, b) => b.likes - a.likes)[0]
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
