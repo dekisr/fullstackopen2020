@@ -1,4 +1,7 @@
+const logger = require('./logger')
+
 const dummy = (blogs) => {
+  logger.info('dummy list:', blogs)
   return 1
 }
 
@@ -54,5 +57,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
-  mostLikes
+  mostLikes,
 }
