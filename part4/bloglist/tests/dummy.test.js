@@ -164,11 +164,11 @@ describe('favorite blogs', () => {
     ])
   })
 
-  test('should return "There is no post with likes yet." if has no posts.', () => {
+  test('should return "There is no post with likes yet." if has no blogs.', () => {
     expect(listHelper.favoriteBlog([])).toBe('There is no post with likes yet.')
   })
 
-  test('should return "There is no post with likes yet." if has no posts with likes.', () => {
+  test('should return "There is no post with likes yet." if has no blogs with likes.', () => {
     expect(listHelper.favoriteBlog(listWithNoLikes)).toBe(
       'There is no post with likes yet.'
     )
