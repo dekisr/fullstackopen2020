@@ -141,7 +141,7 @@ describe('total likes', () => {
 })
 
 describe('favorite blogs', () => {
-  test('should return the list contaning the blogs with most likes', () => {
+  test('should return the list contaning the blogs with most likes.', () => {
     const result = listHelper.favoriteBlog(listWithMultipleFavorites)
     expect(result).toEqual([
       {
@@ -172,5 +172,14 @@ describe('favorite blogs', () => {
     expect(listHelper.favoriteBlog(listWithNoLikes)).toBe(
       'There is no post with likes yet.'
     )
+  })
+})
+
+describe('most blogs', () => {
+  test('returns the author who has the largest amount of blogs.', () => {
+    expect(listHelper.mostBlogs(listWithMultipleBlogs)).toEqual({
+      author: 'Robert C. Martin',
+      blogs: 3,
+    })
   })
 })

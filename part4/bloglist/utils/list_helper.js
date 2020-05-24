@@ -15,8 +15,24 @@ const favoriteBlog = (blogs) => {
     : 'There is no post with likes yet.'
 }
 
+const mostBlogs = (blogs) => {
+  const authors = blogs
+    .map((blog) => blog.author)
+    .filter((author, index, array) => {
+      return array.indexOf(author) === index
+    })
+  const countBlogs = authors.map((author) => {
+    return {
+      author,
+      blogs: blogs.filter((blog) => blog.author === author).length,
+    }
+  })
+  return countBlogs.sort((a, b) => b.blogs - a.blogs)[0]
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
