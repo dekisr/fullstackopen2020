@@ -66,6 +66,18 @@ test(
   }
 )
 
+test('missing title and url from request', async () => {
+  // handled by mongoose and error middleware
+  const newBlog = {
+    author: 'Dummy',
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
