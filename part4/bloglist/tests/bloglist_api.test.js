@@ -5,6 +5,7 @@ const Blog = require('../models/blog')
 const helper = require('./test_helper')
 
 const api = supertest(app)
+jest.setTimeout(15000) // set a larger timeout
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -12,13 +13,17 @@ beforeEach(async () => {
   await Promise.all(blogList.map((blog) => blog.save()))
 })
 
-test('part4', async () => {
-  const response = await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-  expect(response.body).toHaveLength(helper.initialBlogs.length)
-}, 15000) // set a larger timeout
+test(
+  'should return the correct amount of '+
+  'blog posts in the JSON format.',
+  async () => {
+    const response = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveLength(helper.initialBlogs.length)
+  }
+)
 
 afterAll(() => {
   mongoose.connection.close()
