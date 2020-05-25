@@ -5,7 +5,7 @@ const Blog = require('../models/blog')
 const helper = require('./test_helper')
 
 const api = supertest(app)
-jest.setTimeout(15000) // set a larger timeout
+jest.setTimeout(20000) // set a larger timeout
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -76,6 +76,13 @@ test('missing title and url from request', async () => {
     .send(newBlog)
     .expect(400)
     .expect('Content-Type', /application\/json/)
+})
+
+test('deleting a single blog post', async () => {
+  const { body: blogs } = await api.get('/api/blogs')
+  await api.delete(`/api/blogs/${blogs[0].id}`).expect(204)
+  const { body: updatedBlogs } = await api.get('/api/blogs')
+  expect(updatedBlogs).toHaveLength(helper.initialBlogs.length - 1)
 })
 
 afterAll(() => {
