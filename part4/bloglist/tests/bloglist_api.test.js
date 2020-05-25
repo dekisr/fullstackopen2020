@@ -49,7 +49,7 @@ test('should successfully creates a new blog post.', async () => {
 
 test(
   'if the likes property is missing from the request, ' +
-    'it will default to the value 0',
+    'it will default to the value 0.',
   async () => {
     const newBlog = {
       title: 'Dummy Title (No Likes Property)',
@@ -66,7 +66,7 @@ test(
   }
 )
 
-test('missing title and url from request', async () => {
+test('missing title and url from request.', async () => {
   // handled by mongoose and error middleware
   const newBlog = {
     author: 'Dummy',
@@ -78,11 +78,20 @@ test('missing title and url from request', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-test('deleting a single blog post', async () => {
+test('deleting a single blog post.', async () => {
   const { body: blogs } = await api.get('/api/blogs')
   await api.delete(`/api/blogs/${blogs[0].id}`).expect(204)
   const { body: updatedBlogs } = await api.get('/api/blogs')
   expect(updatedBlogs).toHaveLength(helper.initialBlogs.length - 1)
+})
+
+test('updating the information of an individual blog post.', async () => {
+  const { body: blogs } = await api.get('/api/blogs')
+  const likes = Math.floor(Math.random() * 1000) + 1000
+  const changes = { likes }
+  await api.put(`/api/blogs/${blogs[0].id}`).send(changes)
+  const { body: updatedBlogs } = await api.get('/api/blogs')
+  expect(updatedBlogs[0].likes).toBe(likes)
 })
 
 afterAll(() => {
