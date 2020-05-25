@@ -14,8 +14,7 @@ beforeEach(async () => {
 })
 
 test(
-  'should return the correct amount of '+
-  'blog posts in the JSON format.',
+  'should return the correct amount of ' + 'blog posts in the JSON format.',
   async () => {
     const response = await api
       .get('/api/blogs')
@@ -24,6 +23,13 @@ test(
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   }
 )
+
+test('the unique identifier property of the blog posts is named id', async () => {
+  const { body: response } = await api.get('/api/blogs')
+  for (const blog of response) {
+    expect(blog.id).toBeDefined()
+  }
+})
 
 afterAll(() => {
   mongoose.connection.close()
