@@ -24,11 +24,30 @@ test(
   }
 )
 
-test('the unique identifier property of the blog posts is named id', async () => {
+test('the unique identifier property of the blog posts is named id.', async () => {
   const { body: response } = await api.get('/api/blogs')
   for (const blog of response) {
     expect(blog.id).toBeDefined()
   }
+})
+
+test('should successfully creates a new blog post.', async () => {
+  const newBlog = {
+    title: 'Dummy Title',
+    author: 'Dummy',
+    url: 'https://fullstackopen.com/',
+    likes: 0,
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const { body: response } = await api.get('/api/blogs')
+  expect(response).toHaveLength(helper.initialBlogs.length + 1)
+  const titles = response.map((blog) => blog.title)
+  expect(titles).toContain('Dummy Title')
 })
 
 afterAll(() => {
