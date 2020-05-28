@@ -12,11 +12,20 @@ usersRouter.get('/', async (request, response, next) => {
 })
 
 usersRouter.post('/', async (request, response, next) => {
+  const { name, username, password } = request.body
+  // Since we decided to use Mongoose to validate,
+  // I think we should let it handle the validation.
+  // But the solution requested by the exercise 4.16* it's commented bellow
+  // if (password && password.length < 3) {
+  //   return response
+  //     .status(400)
+  //     .json({ error: 'password must be at least 3 characters long' })
+  // }
   const passwordHash =
-    request.body.password && (await bcrypt.hash(request.body.password, 12))
+    password && password.length > 2 ? await bcrypt.hash(password, 12) : password
   const user = new User({
-    name: request.body.name,
-    username: request.body.username,
+    name,
+    username,
     password: passwordHash,
   })
   try {
