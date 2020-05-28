@@ -1,3 +1,4 @@
+/* eslint no-undef: 0 */
 const initialBlogs = [
   {
     _id: ObjectId('5a422a851b54a676234d17f7'),
