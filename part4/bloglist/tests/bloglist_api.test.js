@@ -33,7 +33,7 @@ describe('blogs router', () => {
     }
   })
 
-  test('should successfully creates a new blog post.', async () => {
+  test('cannot add a new blog without a token.', async () => {
     const newBlog = {
       title: 'Dummy Title',
       author: 'Dummy',
@@ -43,6 +43,25 @@ describe('blogs router', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('should successfully creates a new blog post.', async () => {
+    const newBlog = {
+      title: 'Dummy Title',
+      author: 'Dummy',
+      url: 'https://fullstackopen.com/',
+      likes: 0,
+    }
+    // prettier-ignore
+    const { body: { token } } = await api
+      .post('/api/login')
+      .send({ username: 'mluukkai', password: '123' })
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set({ Authorization: `Bearer ${token}` })
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -61,9 +80,14 @@ describe('blogs router', () => {
         author: 'Dummy',
         url: 'https://fullstackopen.com/',
       }
+      // prettier-ignore
+      const { body: { token } } = await api
+        .post('/api/login')
+        .send({ username: 'mluukkai', password: '123' })
       const response = await api
         .post('/api/blogs')
         .send(newBlog)
+        .set({ Authorization: `Bearer ${token}` })
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
@@ -76,16 +100,29 @@ describe('blogs router', () => {
     const newBlog = {
       author: 'Dummy',
     }
+    // prettier-ignore
+    const { body: { token } } = await api
+      .post('/api/login')
+      .send({ username: 'mluukkai', password: '123' })
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set({ Authorization: `Bearer ${token}` })
       .expect(400)
       .expect('Content-Type', /application\/json/)
   })
 
   test('deleting a single blog post.', async () => {
     const { body: blogs } = await api.get('/api/blogs')
-    await api.delete(`/api/blogs/${blogs[0].id}`).expect(204)
+    const blogTodelete = blogs.find((blog) => blog.user.username === 'mluukkai')
+    // prettier-ignore
+    const { body: { token } } = await api
+      .post('/api/login')
+      .send({ username: 'mluukkai', password: '123' })
+    await api
+      .delete(`/api/blogs/${blogTodelete.id}`)
+      .set({ Authorization: `Bearer ${token}` })
+      .expect(204)
     const { body: updatedBlogs } = await api.get('/api/blogs')
     expect(updatedBlogs).toHaveLength(helper.initialBlogs.length - 1)
   })
