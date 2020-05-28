@@ -13,6 +13,8 @@ beforeEach(async () => {
   await User.deleteMany({})
   const blogList = helper.initialBlogs.map((blog) => new Blog(blog))
   await Promise.all(blogList.map((blog) => blog.save()))
+  const userList = helper.initialUsers.map((user) => new User(user))
+  await Promise.all(userList.map((user) => user.save()))
 })
 
 describe('blogs router', () => {
