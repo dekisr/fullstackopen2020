@@ -82,6 +82,21 @@ const App = () => {
       })
   }
 
+  const updateBlogs = (blogObject) => {
+    const updatedBlogs = [...blogs]
+    updatedBlogs[
+      updatedBlogs.findIndex((blog) => blog.id === blogObject.id)
+    ] = {...blogObject}
+    setBlogs(updatedBlogs)
+    setNotification({
+      type: 'success',
+      message: `${blogObject.title} updated.`,
+    })
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -127,10 +142,10 @@ const App = () => {
       </p>
       <hr />
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlogs} />
       ))}
       <hr />
-      <Togglable buttonLabel="new note" ref={blogFormRef}>
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <h2>create new</h2>
         <BlogForm createBlog={addBlog} setNotification={setNotification} />
       </Togglable>
