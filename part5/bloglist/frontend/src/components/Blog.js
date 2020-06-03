@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateBlog, remove }) => {
+const Blog = ({ blog, like, remove }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -14,22 +13,6 @@ const Blog = ({ blog, updateBlog, remove }) => {
 
   const toggleVisibility = () => {
     setVisible(!visible)
-  }
-
-  const like = ({ id, user, likes, author, title, url }) => {
-    const blogObj = {
-      user: user.id,
-      likes: likes + 1,
-      author,
-      title,
-      url,
-    }
-    blogService
-      .like(id, blogObj)
-      .then((updatedBlog) => {
-        updateBlog(updatedBlog)
-      })
-      .catch((error) => console.log(error))
   }
 
   const handleRemove = () => {
@@ -68,7 +51,7 @@ const Blog = ({ blog, updateBlog, remove }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  updateBlog: PropTypes.func.isRequired,
+  like: PropTypes.func.isRequired,
   remove: PropTypes.func.isRequired,
 }
 

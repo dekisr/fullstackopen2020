@@ -16,19 +16,19 @@ describe('<Blog />', () => {
   const mockHandler = jest.fn() // PropTypes...
   beforeEach(() => {
     component = render(
-      <Blog blog={blog} updateBlog={mockHandler} remove={mockHandler} />
+      <Blog blog={blog} like={mockHandler} remove={mockHandler} />
     )
   })
   // component.debug()
-  test('display the blog’s title', () => {
+  test('display the blog’s title.', () => {
     const blogHeader = component.container.querySelector('h3')
     expect(blogHeader).toHaveTextContent('Test Blog')
   })
-  test('display the blog’s author', () => {
+  test('display the blog’s author.', () => {
     const blogHeader = component.container.querySelector('h3')
     expect(blogHeader).toHaveTextContent('Author Test')
   })
-  test('does not render the url or likes', () => {
+  test('does not render the url or likes.', () => {
     const blogContent = component.container.querySelector('ul')
     expect(blogContent).toBe(null)
   })
@@ -38,5 +38,14 @@ describe('<Blog />', () => {
     const blogContent = component.container.querySelector('ul')
     expect(blogContent).toHaveTextContent('urltest')
     expect(blogContent).toHaveTextContent('likes 123')
+  })
+  test('clicking the like button twice.', () => {
+    const viewButton = component.getByText('view')
+    fireEvent.click(viewButton)
+    const blogContent = component.container.querySelector('ul')
+    const likeButton = blogContent.querySelector('button')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })

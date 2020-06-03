@@ -104,6 +104,22 @@ const App = () => {
     }, 5000)
   }
 
+  const likeBlog = ({ id, user, likes, author, title, url }) => {
+    const blogObj = {
+      user: user.id,
+      likes: likes + 1,
+      author,
+      title,
+      url,
+    }
+    blogService
+      .like(id, blogObj)
+      .then((updatedBlog) => {
+        updateBlogs(updatedBlog)
+      })
+      .catch((error) => console.log(error))
+  }
+
   const removeBlog = (id, title) => {
     blogService
       .remove(id)
@@ -175,12 +191,7 @@ const App = () => {
       </p>
       <hr />
       {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          updateBlog={updateBlogs}
-          remove={removeBlog}
-        />
+        <Blog key={blog.id} blog={blog} like={likeBlog} remove={removeBlog} />
       ))}
       <hr />
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
