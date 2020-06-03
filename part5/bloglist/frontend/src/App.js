@@ -16,7 +16,8 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then((blogs) => {
-      setBlogs(sortByLikes(blogs))})
+      setBlogs(sortByLikes(blogs))
+    })
   }, [])
 
   useEffect(() => {
@@ -62,7 +63,7 @@ const App = () => {
     blogService
       .create(blogObject)
       .then((newBlog) => {
-        setBlogs(blogs.concat({...newBlog, user}))
+        setBlogs(blogs.concat({ ...newBlog, user }))
         setNotification({
           type: 'success',
           message: `${newBlog.title} by ${newBlog.author} added.`,
