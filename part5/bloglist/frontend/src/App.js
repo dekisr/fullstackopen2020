@@ -4,6 +4,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -11,9 +12,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
   const [blogs, setBlogs] = useState([])
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const blogFormRef = React.createRef()
 
   useEffect(() => {
@@ -58,47 +56,30 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
+  const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    if (!title || !author || !url) {
-      setNotification({
-        type: 'error',
-        message: 'Fill the form correctly.',
+    blogService
+      .create(blogObject)
+      .then((newBlog) => {
+        setBlogs(blogs.concat(newBlog))
+        setNotification({
+          type: 'success',
+          message: `${newBlog.title} by ${newBlog.author} added.`,
+        })
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
       })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-      return
-    }
-    const blogObject = {
-      title,
-      author,
-      url,
-    }
-    try {
-      const newBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(newBlog))
-      setNotification({
-        type: 'success',
-        message: `${newBlog.title} by ${newBlog.author} added.`,
+      .catch((error) => {
+        console.log(error)
+        setNotification({
+          type: 'error',
+          message: 'Could not create a new blog.',
+        })
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
       })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-    } catch (error) {
-      console.log(error)
-      setNotification({
-        type: 'error',
-        message: 'Could not create a new blog.',
-      })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-    }
   }
 
   const loginForm = () => (
@@ -129,44 +110,6 @@ const App = () => {
     </form>
   )
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        <label htmlFor="title">title:</label>
-        <input
-          type="text"
-          value={title}
-          id="title"
-          name="Title"
-          onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="author">author:</label>
-        <input
-          type="text"
-          value={author}
-          id="author"
-          name="Author"
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="url">url:</label>
-        <input
-          type="text"
-          value={url}
-          id="url"
-          name="Url"
-          onChange={({ target }) => setUrl(target.value)}
-        />
-      </div>
-      <div>
-        <button>create</button>
-      </div>
-    </form>
-  )
-
   return user === null ? (
     <main>
       <Notification notification={notification} />
@@ -189,7 +132,7 @@ const App = () => {
       <hr />
       <Togglable buttonLabel="new note" ref={blogFormRef}>
         <h2>create new</h2>
-        {blogForm()}
+        <BlogForm createBlog={addBlog} setNotification={setNotification} />
       </Togglable>
     </main>
   )
