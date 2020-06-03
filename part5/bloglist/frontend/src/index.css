@@ -66,21 +66,21 @@ button:active {
   background-color: dimgrey;
 }
 
-.cancel {
+.toggle {
   position: relative;
-  /* top: -0.125rem; */
+  top: -0.125rem;
   margin: 0.125rem;
   padding: 0.188rem;
   font-size: 0.75rem;
   text-transform: lowercase;
   background-color: tomato;
 }
-.cancel:hover,
-.cancel:active {
+.toggle:hover,
+.toggle:active {
   outline: none;
   background-color: firebrick;
 }
-.cancel:active {
+.toggle:active {
   text-decoration: line-through;
 }
 
