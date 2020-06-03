@@ -15,7 +15,7 @@ const App = () => {
   const blogFormRef = React.createRef()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll().then((blogs) => setBlogs(sortByLikes(blogs)))
   }, [])
 
   useEffect(() => {
@@ -82,12 +82,17 @@ const App = () => {
       })
   }
 
+  const sortByLikes = (blogsArray) => {
+    const sortedBlogs = [...blogsArray].sort((a, b) => b.likes - a.likes)
+    return sortedBlogs
+  }
+
   const updateBlogs = (blogObject) => {
     const updatedBlogs = [...blogs]
     updatedBlogs[
       updatedBlogs.findIndex((blog) => blog.id === blogObject.id)
-    ] = {...blogObject}
-    setBlogs(updatedBlogs)
+    ] = { ...blogObject }
+    setBlogs(sortByLikes(updatedBlogs))
     setNotification({
       type: 'success',
       message: `${blogObject.title} updated.`,
