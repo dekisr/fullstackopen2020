@@ -15,7 +15,8 @@ const App = () => {
   const blogFormRef = React.createRef()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(sortByLikes(blogs)))
+    blogService.getAll().then((blogs) => {
+      setBlogs(sortByLikes(blogs))})
   }, [])
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const App = () => {
     blogService
       .create(blogObject)
       .then((newBlog) => {
-        setBlogs(blogs.concat(newBlog))
+        setBlogs(blogs.concat({...newBlog, user}))
         setNotification({
           type: 'success',
           message: `${newBlog.title} by ${newBlog.author} added.`,
@@ -100,6 +101,32 @@ const App = () => {
     setTimeout(() => {
       setNotification(null)
     }, 5000)
+  }
+
+  const removeBlog = (id, title) => {
+    blogService
+      .remove(id)
+      .then(() => {
+        const filteredBlogs = blogs.filter((blog) => blog.id !== id)
+        setBlogs(filteredBlogs)
+        setNotification({
+          type: 'success',
+          message: `The blog ${title} was removed.`,
+        })
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+      })
+      .catch((error) => {
+        console.log(error)
+        setNotification({
+          type: 'error',
+          message: 'Could not remove the blog.',
+        })
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+      })
   }
 
   const loginForm = () => (
@@ -147,7 +174,12 @@ const App = () => {
       </p>
       <hr />
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlogs} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          updateBlog={updateBlogs}
+          remove={removeBlog}
+        />
       ))}
       <hr />
       <Togglable buttonLabel="new blog" ref={blogFormRef}>

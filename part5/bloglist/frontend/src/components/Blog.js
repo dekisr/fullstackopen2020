@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, remove }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -23,9 +23,17 @@ const Blog = ({ blog, updateBlog }) => {
       title,
       url,
     }
-    blogService.like(id, blogObj).then((updatedBlog) => {
-      updateBlog(updatedBlog)
-    })
+    blogService
+      .like(id, blogObj)
+      .then((updatedBlog) => {
+        updateBlog(updatedBlog)
+      })
+      .catch((error) => console.log(error))
+  }
+
+  const handleRemove = () => {
+    window.confirm(`Remove blog ${blog.title} by ${blog.author}?`) &&
+      remove(blog.id, blog.title)
   }
 
   return (
@@ -37,16 +45,21 @@ const Blog = ({ blog, updateBlog }) => {
         </button>
       </h3>
       {visible && (
-        <ul>
-          <li>{blog.url}</li>
-          <li>
-            likes {blog.likes}{' '}
-            <button onClick={() => like(blog)} className="toggle">
-              like
-            </button>
-          </li>
-          <li>{blog.user.name}</li>
-        </ul>
+        <>
+          <ul>
+            <li>{blog.url}</li>
+            <li>
+              likes {blog.likes}{' '}
+              <button onClick={() => like(blog)} className="toggle">
+                like
+              </button>
+            </li>
+            <li>{blog.user.name}</li>
+          </ul>
+          <button onClick={handleRemove} className="toggle cancel">
+            remove
+          </button>
+        </>
       )}
     </div>
   )

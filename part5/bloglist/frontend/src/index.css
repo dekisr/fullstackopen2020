@@ -73,14 +73,25 @@ button:active {
   padding: 0.188rem;
   font-size: 0.75rem;
   text-transform: lowercase;
-  background-color: tomato;
+  background-color: deepskyblue;
 }
 .toggle:hover,
 .toggle:active {
   outline: none;
-  background-color: firebrick;
+  background-color: cornflowerblue;
 }
 .toggle:active {
+  text-decoration: underline;
+}
+
+.cancel {
+  background-color: tomato;
+}
+.cancel:hover,
+.cancel:active {
+  background-color: firebrick;
+}
+.cancel:active {
   text-decoration: line-through;
 }
 
