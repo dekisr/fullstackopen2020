@@ -110,5 +110,35 @@ describe('Blog app', function () {
         .should('contain', 'Could not remove the blog.')
         .and('have.css', 'color', 'rgb(255, 99, 71)')
     })
+
+    it('The blogs are ordered by likes', function () {
+      cy.createBlog({
+        title: 'FIRST to SECOND',
+        author: 'Matti Luukkainen',
+        url: 'https://fullstackopen.com',
+      })
+      cy.createBlog({
+        title: 'SECOND to FIRST',
+        author: 'Matti Luukkainen',
+        url: 'https://fullstackopen.com',
+      })
+      cy.get('main div > h3:first').should(
+        'contain',
+        'FIRST to SECOND'
+      )
+
+      cy.get('main div > h3')
+        .contains('SECOND to FIRST')
+        .parent()
+        .as('theBlog')
+      cy.get('@theBlog').contains('view').click()
+      cy.get('@theBlog').contains('like').click()
+      cy.get('@theBlog').should('contain', 'likes 1')
+
+      cy.get('main div > h3:first').should(
+        'contain',
+        'SECOND to FIRST'
+      )
+    })
   })
 })
