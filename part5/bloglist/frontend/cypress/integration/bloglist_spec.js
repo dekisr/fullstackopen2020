@@ -34,4 +34,23 @@ describe('Blog app', function () {
         .and('have.css', 'color', 'rgb(255, 99, 71)')
     })
   })
+
+  describe.only('When logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: 'mluukkai', password: 'salainen' })
+    })
+    it('A blog can be created', function () {
+      // cy.createBlog({
+      //   title: 'Exercise 5.19',
+      //   author: 'Hellas',
+      //   url: 'https://fullstackopen.com',
+      // })
+      cy.contains('new blog').click()
+      cy.get('main form #title').type('Exercise 5.19')
+      cy.get('main form #author').type('Hellas')
+      cy.get('main form #url').type('https://fullstackopen.com')
+      cy.get('main form button').contains('create').click()
+      cy.get('main div > h3').should('contain', 'Exercise 5.19 Hellas')
+    })
+  })
 })
