@@ -69,5 +69,46 @@ describe('Blog app', function () {
       cy.get('@theBlog').contains('like').click()
       cy.get('@theBlog').should('contain', 'likes 1')
     })
+
+    it('A blog can be deleted by its creator', function () {
+      cy.createBlog({
+        title: 'Exercise 5.21',
+        author: 'Matti Luukkainen',
+        url: 'https://fullstackopen.com',
+      })
+      cy.get('main div > h3')
+        .contains('Exercise 5.21 Matti Luukkainen')
+        .parent()
+        .as('theBlog')
+      cy.get('@theBlog').contains('view').click()
+      cy.get('@theBlog').contains('remove').click()
+      cy.get('main h3').should('not.contain', 'Exercise 5.21 Matti Luukkainen')
+    })
+
+    it('A blog cannot be deleted by another users', function () {
+      cy.createBlog({
+        title: 'Exercise 5.21',
+        author: 'Matti Luukkainen',
+        url: 'https://fullstackopen.com',
+      })
+      const user = {
+        name: 'Arto Hellas',
+        username: 'hellas',
+        password: 'salainen',
+      }
+      cy.request('POST', 'http://localhost:3001/api/users', user)
+      cy.get('main p button').contains('logout').click()
+      cy.login({ username: 'hellas', password: 'salainen' })
+      cy.get('main div > h3')
+        .contains('Exercise 5.21 Matti Luukkainen')
+        .parent()
+        .as('theBlog')
+      cy.get('@theBlog').contains('view').click()
+      cy.get('@theBlog').contains('remove').click()
+      cy.get('main h3').should('contain', 'Exercise 5.21 Matti Luukkainen')
+      cy.get('.notification')
+        .should('contain', 'Could not remove the blog.')
+        .and('have.css', 'color', 'rgb(255, 99, 71)')
+    })
   })
 })
