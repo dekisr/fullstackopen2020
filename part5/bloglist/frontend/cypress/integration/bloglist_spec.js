@@ -35,10 +35,11 @@ describe('Blog app', function () {
     })
   })
 
-  describe.only('When logged in', function () {
+  describe('When logged in', function () {
     beforeEach(function () {
       cy.login({ username: 'mluukkai', password: 'salainen' })
     })
+
     it('A blog can be created', function () {
       // cy.createBlog({
       //   title: 'Exercise 5.19',
@@ -51,6 +52,24 @@ describe('Blog app', function () {
       cy.get('main form #url').type('https://fullstackopen.com')
       cy.get('main form button').contains('create').click()
       cy.get('main div > h3').should('contain', 'Exercise 5.19 Hellas')
+    })
+
+    it.only('A blog can be liked', function () {
+      cy.createBlog({
+        title: 'Exercise 5.20',
+        author: 'Matti Luukkainen',
+        url: 'https://fullstackopen.com',
+      })
+      cy.get('main div > h3')
+        .contains('Exercise 5.20 Matti Luukkainen')
+        .parent()
+        .as('theBlog')
+
+      cy.get('@theBlog').contains('view').click()
+      cy.get('@theBlog').contains('like').click()
+      cy.get('@theBlog').should('contain', 'likes 1')
+
+      // cy.get('main div > h3').contains('Exercise 5.20 Matti Luukkainen').contains('')
     })
   })
 })
