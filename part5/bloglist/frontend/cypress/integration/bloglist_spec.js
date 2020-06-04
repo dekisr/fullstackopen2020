@@ -54,7 +54,7 @@ describe('Blog app', function () {
       cy.get('main div > h3').should('contain', 'Exercise 5.19 Hellas')
     })
 
-    it.only('A blog can be liked', function () {
+    it('A blog can be liked', function () {
       cy.createBlog({
         title: 'Exercise 5.20',
         author: 'Matti Luukkainen',
@@ -68,8 +68,6 @@ describe('Blog app', function () {
       cy.get('@theBlog').contains('view').click()
       cy.get('@theBlog').contains('like').click()
       cy.get('@theBlog').should('contain', 'likes 1')
-
-      // cy.get('main div > h3').contains('Exercise 5.20 Matti Luukkainen').contains('')
     })
   })
 })
