@@ -38,6 +38,7 @@ const anecdoteReducer = (state = initialState, action) => {
   }
 }
 
+// action creators
 export const voteUp = (id) => ({ type: 'VOTE', data: { id } })
 export const createNew = (content) => ({
   type: 'NEW_ANECDOTE',
