@@ -1,15 +1,21 @@
-const notificationReducer = (state = 'notification', action) => {
+const notificationReducer = (state = '', action) => {
   switch (action.type) {
-    case 'TEST':
+    case 'SET':
       return action.message
+    case 'RESET':
+      return ''
     default:
       return state
   }
 }
 
 export const setNotification = (message) => ({
-  type: 'TEST',
-  message
+  type: 'SET',
+  message,
+})
+
+export const resetNotification = () => ({
+  type: 'RESET',
 })
 
 export default notificationReducer
