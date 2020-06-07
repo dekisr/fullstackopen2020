@@ -8,8 +8,12 @@ import {
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(({ anecdotes }) =>
-    [...anecdotes].sort((a, b) => b.votes - a.votes)
+  const anecdotes = useSelector(({ anecdotes, filter }) =>
+    [...anecdotes]
+      .sort((a, b) => b.votes - a.votes)
+      .filter((anecdote) =>
+        anecdote.content.toLowerCase().includes(filter.toLowerCase())
+      )
   )
   const vote = (id, content) => {
     dispatch(voteUp(id))
