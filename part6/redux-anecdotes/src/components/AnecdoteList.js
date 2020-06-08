@@ -34,19 +34,22 @@ const AnecdoteList = (props) => {
     props.setNotification(`You voted for "${content}" anecdote.`, 5)
   }
   return (
-    <>
+    <ul>
       {anecdotes.map((anecdote) => (
-        <div key={anecdote.id}>
-          <div>{anecdote.content}</div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id, anecdote.content)}>
+        <li key={anecdote.id}>
+          “{anecdote.content}”
+          <span>
+            Has <strong>{anecdote.votes}</strong> votes.
+            <button
+              onClick={() => vote(anecdote.id, anecdote.content)}
+              className="vote"
+            >
               vote
             </button>
-          </div>
-        </div>
+          </span>
+        </li>
       ))}
-    </>
+    </ul>
   )
 }
 

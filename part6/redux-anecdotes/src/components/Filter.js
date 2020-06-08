@@ -10,14 +10,12 @@ const Filter = (props) => {
     // dispatch(setFilter(filter))
     props.setFilter(filter)
   }
-  const style = {
-    marginBottom: 10,
-  }
 
   return (
-    <div style={style}>
-      filter <input onChange={handleChange} />
-    </div>
+    <form>
+      <label htmlFor="filter">Filter:</label>
+      <input type="text" id="filter" onChange={handleChange} />
+    </form>
   )
 }
 

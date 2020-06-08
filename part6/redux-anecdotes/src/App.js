@@ -6,13 +6,15 @@ import AnecdoteForm from './components/AnecdoteForm'
 
 const App = () => {
   return (
-    <div>
-      <h2>Anecdotes</h2>
+    <main>
+      <h1>Anecdotes</h1>
       <Filter />
+      <hr />
       <Notification />
       <AnecdoteList />
+      <hr />
       <AnecdoteForm />
-    </div>
+    </main>
   )
 }
 
