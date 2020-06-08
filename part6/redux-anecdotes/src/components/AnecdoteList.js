@@ -1,25 +1,37 @@
 import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { voteUp, initializeAnecdotes } from '../reducers/anecdoteReducer'
+// import { useSelector, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
+import { initializeAnecdotes, voteUp } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const AnecdoteList = () => {
-  const dispatch = useDispatch()
+const AnecdoteList = (props) => {
+  // const dispatch = useDispatch()
+  const { initializeAnecdotes, anecdotes } = props
 
+  // useEffect(() => {
+  //   dispatch(initializeAnecdotes())
+  // }, [dispatch])
   useEffect(() => {
-    dispatch(initializeAnecdotes())
-  }, [dispatch])
+    initializeAnecdotes()
+  }, [initializeAnecdotes])
 
-  const anecdotes = useSelector(({ anecdotes, filter }) =>
-    [...anecdotes]
-      .sort((a, b) => b.votes - a.votes)
-      .filter((anecdote) =>
-        anecdote.content.toLowerCase().includes(filter.toLowerCase())
-      )
-  )
+  // const anecdotes = useSelector(({ anecdotes, filter }) =>
+  //   [...anecdotes]
+  //     .sort((a, b) => b.votes - a.votes)
+  //     .filter((anecdote) =>
+  //       anecdote.content.toLowerCase().includes(filter.toLowerCase())
+  //     )
+  // )
+
+  // const anecdotes = [...props.anecdotes]
+  //   .sort((a, b) => b.votes - a.votes)
+  //   .filter((anecdote) =>
+  //     anecdote.content.toLowerCase().includes(props.filter.toLowerCase())
+  //   )
+
   const vote = (id, content) => {
-    dispatch(voteUp(id))
-    dispatch(setNotification(`You voted for "${content}" anecdote.`, 5))
+    props.voteUp(id)
+    props.setNotification(`You voted for "${content}" anecdote.`, 5)
   }
   return (
     <>
@@ -38,4 +50,21 @@ const AnecdoteList = () => {
   )
 }
 
-export default AnecdoteList
+// export default AnecdoteList
+const mapStateToProps = (state) => {
+  console.log(state)
+  return {
+    anecdotes: state.anecdotes
+      .sort((a, b) => b.votes - a.votes)
+      .filter((anecdote) =>
+        anecdote.content.toLowerCase().includes(state.filter.toLowerCase())
+      ),
+    filter: state.filter,
+  }
+}
+const mapDispatchToProps = {
+  initializeAnecdotes,
+  voteUp,
+  setNotification,
+}
+export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList)
