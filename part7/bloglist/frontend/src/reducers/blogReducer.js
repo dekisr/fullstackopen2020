@@ -22,16 +22,6 @@ export const initializeBlogs = () => {
   }
 }
 
-// const addBlog = (blogObject) => {
-//   blogFormRef.current.toggleVisibility()
-//   blogService
-//     .create(blogObject)
-//     .then((newBlog) => {
-//       setBlogs(blogs.concat({ ...newBlog, user }))
-//     })
-//     .catch((error) => {})
-// }
-
 export const createBlog = (blogObject) => {
   return async (dispatch) => {
     try {
