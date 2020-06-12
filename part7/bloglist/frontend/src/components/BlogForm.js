@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = () => {
+const BlogForm = ({ formElem }) => {
   const dispatch = useDispatch()
   const message = useSelector(({ notification: { message } }) => message)
 
@@ -28,6 +28,7 @@ const BlogForm = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      formElem.current.toggleVisibility()
     }
   }, [message])
 
