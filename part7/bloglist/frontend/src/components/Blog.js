@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import { useParams } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
 
 const Blog = () => {
   const dispatch = useDispatch()
@@ -22,9 +23,9 @@ const Blog = () => {
 
   return !blog ? null : (
     <div style={blogStyle}>
-      <h3>
-        {blog.title} {blog.author}
-      </h3>
+      <h2>
+        {blog.title} - {blog.author}
+      </h2>
       <ul>
         <li>{blog.url}</li>
         <li>
@@ -36,7 +37,17 @@ const Blog = () => {
             like
           </button>
         </li>
-        <li>{blog.user.name}</li>
+        <li>
+          added by: <strong>{blog.user.name}</strong>
+        </li>
+      </ul>
+      <h3>Comments</h3>
+      <ul>
+        {blog.comments && !blog.comments.length ? (
+          <li>no comments yet.</li>
+        ) : (
+          blog.comments.map((comment) => <li key={uuidv4()}>{comment}</li>)
+        )}
       </ul>
       <button onClick={handleRemove} className="toggle cancel">
         remove

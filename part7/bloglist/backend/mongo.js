@@ -6,6 +6,7 @@ const initialBlogs = [
     author: 'Michael Chan',
     url: 'https://reactpatterns.com/',
     likes: 7,
+    comments: ['awesome article', 'a must read for every developer'],
     user: ObjectId('5c4857c4003ad1a6e6626939'),
   },
   {
