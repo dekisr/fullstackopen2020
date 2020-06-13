@@ -13,11 +13,11 @@ import { setNotification } from './reducers/notificationReducer'
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(({ blogs }) => sortByLikes(blogs))
+  const blogFormRef = React.createRef()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const blogFormRef = React.createRef()
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -54,45 +54,6 @@ const App = () => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
   }
-
-  // const updateBlogs = (blogObject) => {
-  //   const updatedBlogs = [...blogs]
-  //   updatedBlogs[
-  //     updatedBlogs.findIndex((blog) => blog.id === blogObject.id)
-  //   ] = { ...blogObject }
-  //   setBlogs(sortByLikes(updatedBlogs))
-  //   dispatch(setNotification('success', `${blogObject.title} updated.`))
-  // }
-
-  // const likeBlog = ({ id, user, likes, author, title, url }) => {
-  //   const blogObj = {
-  //     user: user.id,
-  //     likes: likes + 1,
-  //     author,
-  //     title,
-  //     url,
-  //   }
-  //   blogService
-  //     .like(id, blogObj)
-  //     .then((updatedBlog) => {
-  //       updateBlogs(updatedBlog)
-  //     })
-  //     .catch((error) => console.log(error))
-  // }
-
-  // const removeBlog = (id, title) => {
-  //   blogService
-  //     .remove(id)
-  //     .then(() => {
-  //       const filteredBlogs = blogs.filter((blog) => blog.id !== id)
-  //       setBlogs(filteredBlogs)
-  //       dispatch(setNotification('success', `The blog ${title} was removed.`))
-  //     })
-  //     .catch((error) => {
-  //       dispatch(setNotification('error', 'Could not remove the blog.'))
-  //       console.log(error)
-  //     })
-  // }
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>

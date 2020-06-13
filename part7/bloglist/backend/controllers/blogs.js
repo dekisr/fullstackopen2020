@@ -10,11 +10,6 @@ blogsRouter.get('/', async (request, response, next) => {
   } catch (exception) {
     next(exception)
   }
-  // Blog.find({})
-  //   .then((blogs) => {
-  //     response.status(200).json(blogs.map((blog) => blog.toJSON()))
-  //   })
-  //   .catch((error) => next(error))
 })
 
 blogsRouter.post('/', async (request, response, next) => {
@@ -35,7 +30,11 @@ blogsRouter.post('/', async (request, response, next) => {
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
-    response.status(201).json(savedBlog.toJSON())
+    const populatedBlog = await Blog.findById(savedBlog._id).populate('user', {
+      name: 1,
+      username: 1,
+    })
+    response.status(201).json(populatedBlog.toJSON())
   } catch (exception) {
     next(exception)
   }
