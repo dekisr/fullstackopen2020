@@ -1,8 +1,6 @@
-import usersReducer from '../reducers/usersReducer'
-
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 
 const User = () => {
   const id = useParams().id
@@ -14,7 +12,9 @@ const User = () => {
       {user.blogs.length && (
         <ul>
           {user.blogs.map((blog) => (
-            <li key={blog.id}>{blog.title}</li>
+            <li key={blog.id}>
+              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+            </li>
           ))}
         </ul>
       )}

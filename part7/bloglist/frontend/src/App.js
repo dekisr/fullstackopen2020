@@ -8,6 +8,7 @@ import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import Users from './components/Users'
 import User from './components/User'
+import Blog from './components/Blog'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -83,6 +84,12 @@ const App = () => {
         </Route>
         <Route path="/users/:id">
           <User />
+        </Route>
+        <Route path="/blogs/:id">
+          <Blog />
+        </Route>
+        <Route>
+          <h2>not found...</h2>
         </Route>
       </Switch>
     </main>

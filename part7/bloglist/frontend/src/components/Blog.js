@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
-import PropTypes from 'prop-types'
+import { useParams } from 'react-router-dom'
 
-const Blog = ({ blog }) => {
+const Blog = () => {
   const dispatch = useDispatch()
-  const [visible, setVisible] = useState(false)
+  const id = useParams().id
+  const blog = useSelector(({ blogs }) => blogs).find((blog) => blog.id === id)
 
   const blogStyle = {
     padding: '0.5rem',
@@ -14,49 +15,34 @@ const Blog = ({ blog }) => {
     marginBottom: 5,
   }
 
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
-
   const handleRemove = () => {
     window.confirm(`Remove blog ${blog.title} by ${blog.author}?`) &&
       dispatch(removeBlog(blog.id, blog.title))
   }
 
-  return (
+  return !blog ? null : (
     <div style={blogStyle}>
       <h3>
         {blog.title} {blog.author}
-        <button onClick={toggleVisibility} className="toggle">
-          {visible ? 'hide' : 'view'}
-        </button>
       </h3>
-      {visible && (
-        <>
-          <ul>
-            <li>{blog.url}</li>
-            <li>
-              likes {blog.likes}{' '}
-              <button
-                onClick={() => dispatch(likeBlog(blog.id))}
-                className="toggle"
-              >
-                like
-              </button>
-            </li>
-            <li>{blog.user.name}</li>
-          </ul>
-          <button onClick={handleRemove} className="toggle cancel">
-            remove
+      <ul>
+        <li>{blog.url}</li>
+        <li>
+          likes {blog.likes}{' '}
+          <button
+            onClick={() => dispatch(likeBlog(blog.id))}
+            className="toggle"
+          >
+            like
           </button>
-        </>
-      )}
+        </li>
+        <li>{blog.user.name}</li>
+      </ul>
+      <button onClick={handleRemove} className="toggle cancel">
+        remove
+      </button>
     </div>
   )
-}
-
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
 }
 
 export default Blog

@@ -1,18 +1,22 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { sortByLikes } from '../utils/blogs'
 import Togglable from './Togglable'
-import Blog from './Blog'
 import BlogForm from './BlogForm'
 
 const BlogList = () => {
   const blogs = useSelector(({ blogs }) => sortByLikes(blogs))
   const blogFormRef = React.createRef()
-  return (
+  return !blogs ? null : (
     <>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      <ul>
+        {blogs.map((blog) => (
+          <li key={blog.id}>
+            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          </li>
+        ))}
+      </ul>
       <hr />
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <h2>create new</h2>
