@@ -30,7 +30,7 @@ const BlogForm = ({ formElem }) => {
       setUrl('')
       formElem.current.toggleVisibility()
     }
-  }, [message])
+  }, [message, title, author, formElem])
 
   return (
     <form onSubmit={addBlog}>

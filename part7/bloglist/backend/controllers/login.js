@@ -31,7 +31,7 @@ loginRouter.post('/', async (request, response, next) => {
 
     response
       .status(200)
-      .send({ token, username: user.username, name: user.name })
+      .send({ token, name: user.name, username: user.username, id: user._id })
   } catch (error) {
     next(error)
   }
