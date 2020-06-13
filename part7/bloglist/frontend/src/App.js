@@ -9,6 +9,7 @@ import BlogList from './components/BlogList'
 import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
+import Menu from './components/Menu'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -69,6 +70,7 @@ const App = () => {
     <main>
       <Notification />
       <h1>blogs</h1>
+      <Menu />
       <hr />
       <p>
         {user.name} <strong>logged</strong> in{' '}
