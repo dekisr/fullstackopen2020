@@ -65,6 +65,31 @@ export const likeBlog = (id) => {
   }
 }
 
+export const commentBlog = (id, comment) => {
+  return async (dispatch, getState) => {
+    if (!comment) {
+      return dispatch(setNotification('error', `Invalid comment.`))
+    }
+    const blog = getState().blogs.find((blog) => blog.id === id)
+    const blogObj = {
+      ...blog,
+      user: blog.user.id,
+      comments: [...blog.comments, comment],
+    }
+    try {
+      const updatedBlog = await blogService.comment(id, blogObj)
+      dispatch({
+        type: 'UPDATE_BLOG',
+        blog: updatedBlog,
+      })
+      dispatch(setNotification('success', `Comment "${comment}" added.`))
+    } catch (error) {
+      dispatch(setNotification('error', `Could not add the comment.`))
+      console.log(error)
+    }
+  }
+}
+
 export const removeBlog = (id, title) => {
   return async (dispatch) => {
     try {

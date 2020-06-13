@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { likeBlog, removeBlog } from '../reducers/blogReducer'
+import { likeBlog, commentBlog, removeBlog } from '../reducers/blogReducer'
 import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -9,11 +9,18 @@ const Blog = () => {
   const id = useParams().id
   const blog = useSelector(({ blogs }) => blogs).find((blog) => blog.id === id)
 
+  const [comment, setComment] = useState('')
+
   const blogStyle = {
     padding: '0.5rem',
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
+  }
+
+  const handleComment = (id, comment) => {
+    dispatch(commentBlog(id, comment))
+    setComment('')
   }
 
   const handleRemove = () => {
@@ -42,6 +49,17 @@ const Blog = () => {
         </li>
       </ul>
       <h3>Comments</h3>
+      <label htmlFor="title">comment:</label>
+      <input
+        type="text"
+        value={comment}
+        id="comment"
+        name="Comment"
+        onChange={({ target }) => setComment(target.value)}
+      />
+      <button onClick={() => handleComment(blog.id, comment)}>
+        add comment
+      </button>
       <ul>
         {blog.comments && !blog.comments.length ? (
           <li>no comments yet.</li>

@@ -28,6 +28,14 @@ const like = async (id, newObject) => {
   return response.data
 }
 
+const comment = async (id, newObject) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = await axios.put(`${baseUrl}/${id}`, newObject, config)
+  return response.data
+}
+
 const remove = async (id) => {
   const config = {
     headers: { Authorization: token },
@@ -36,4 +44,4 @@ const remove = async (id) => {
   return response
 }
 
-export default { getAll, create, like, remove, setToken }
+export default { getAll, create, like, comment, remove, setToken }
