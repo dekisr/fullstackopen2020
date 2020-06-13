@@ -1,24 +1,21 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getUsers } from '../reducers/usersReducer'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Users = () => {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(getUsers())
-  }, [dispatch])
   const users = useSelector(({ users }) => users)
-  return (
-    users.length && (
-      <>
-        <h2>Users</h2>
+  return !users.length ? null : (
+    <>
+      <h2>Users</h2>
+      <ul>
         {users.map((user) => (
-          <div key={user.id}>
-            {user.name} {user.blogs.length}
-          </div>
+          <li key={user.id}>
+            <Link to={`/users/${user.id}`}>{user.name}</Link>
+            {user.blogs.length}
+          </li>
         ))}
-      </>
-    )
+      </ul>
+    </>
   )
 }
 

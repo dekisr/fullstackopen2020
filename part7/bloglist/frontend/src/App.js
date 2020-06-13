@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route } from 'react-router-dom'
-import { initializeBlogs } from './reducers/blogReducer'
 import { setUser, login, logout } from './reducers/userReducer'
+import { getUsers } from './reducers/usersReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import Users from './components/Users'
+import User from './components/User'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -16,6 +18,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(setUser())
+    dispatch(getUsers())
     dispatch(initializeBlogs())
   }, [dispatch])
 
@@ -75,8 +78,11 @@ const App = () => {
         <Route exact path="/">
           <BlogList />
         </Route>
-        <Route path="/users">
+        <Route exact path="/users">
           <Users />
+        </Route>
+        <Route path="/users/:id">
+          <User />
         </Route>
       </Switch>
     </main>
