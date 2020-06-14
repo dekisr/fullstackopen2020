@@ -1,12 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import StyledNotification from '../styles/NotificationStyles'
 
 const Notification = () => {
   const notification = useSelector(({ notification }) => notification)
   return !notification.message ? null : (
-    <div className={`notification ${notification.kind}`}>
+    <StyledNotification kind={notification.kind}>
       {notification.message}
-    </div>
+    </StyledNotification>
   )
 }
 

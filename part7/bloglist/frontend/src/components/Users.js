@@ -11,7 +11,7 @@ const Users = () => {
         {users.map((user) => (
           <li key={user.id}>
             <Link to={`/users/${user.id}`}>{user.name}</Link>
-            {user.blogs.length}
+            {` - ${user.blogs.length} blogs`}
           </li>
         ))}
       </ul>

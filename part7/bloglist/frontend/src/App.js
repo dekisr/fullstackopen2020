@@ -10,6 +10,7 @@ import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
 import Menu from './components/Menu'
+import StyledApp from './styles/AppStyles'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -55,26 +56,26 @@ const App = () => {
         />
       </div>
       <div>
-        <button>login</button>
+        <StyledApp.Button>login</StyledApp.Button>
       </div>
     </form>
   )
 
   return user === null ? (
-    <main>
+    <StyledApp>
       <Notification />
       <h2>Log in to application</h2>
       {loginForm()}
-    </main>
+    </StyledApp>
   ) : (
-    <main>
+    <StyledApp>
       <Notification />
-      <h1>blogs</h1>
+      <h1>Bloglist for Full Stack Open 2020</h1>
       <Menu />
       <hr />
       <p>
         {user.name} <strong>logged</strong> in{' '}
-        <button onClick={handleLogout}>logout</button>
+        <StyledApp.Button onClick={handleLogout}>logout</StyledApp.Button>
       </p>
       <hr />
       <Switch>
@@ -94,7 +95,7 @@ const App = () => {
           <h2>not found...</h2>
         </Route>
       </Switch>
-    </main>
+    </StyledApp>
   )
 }
 

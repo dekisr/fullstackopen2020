@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { createBlog } from '../reducers/blogReducer'
+import StyledBlogForm from '../styles/BlogFormStyles'
 
 const BlogForm = ({ formElem }) => {
   const dispatch = useDispatch()
@@ -33,8 +34,8 @@ const BlogForm = ({ formElem }) => {
   }, [message, title, author, formElem])
 
   return (
-    <form onSubmit={addBlog}>
-      <div>
+    <>
+      <StyledBlogForm>
         <label htmlFor="title">title:</label>
         <input
           type="text"
@@ -43,8 +44,6 @@ const BlogForm = ({ formElem }) => {
           name="Title"
           onChange={({ target }) => setTitle(target.value)}
         />
-      </div>
-      <div>
         <label htmlFor="author">author:</label>
         <input
           type="text"
@@ -53,8 +52,6 @@ const BlogForm = ({ formElem }) => {
           name="Author"
           onChange={({ target }) => setAuthor(target.value)}
         />
-      </div>
-      <div>
         <label htmlFor="url">url:</label>
         <input
           type="text"
@@ -63,11 +60,9 @@ const BlogForm = ({ formElem }) => {
           name="Url"
           onChange={({ target }) => setUrl(target.value)}
         />
-      </div>
-      <div>
-        <button type="submit">create</button>
-      </div>
-    </form>
+      </StyledBlogForm>
+      <StyledBlogForm.Button onClick={addBlog}>create</StyledBlogForm.Button>
+    </>
   )
 }
 

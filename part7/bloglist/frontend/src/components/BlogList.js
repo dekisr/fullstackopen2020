@@ -19,7 +19,7 @@ const BlogList = () => {
       </ul>
       <hr />
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <h2>create new</h2>
+        <h2>Create New</h2>
         <BlogForm formElem={blogFormRef} />
       </Togglable>
     </>
