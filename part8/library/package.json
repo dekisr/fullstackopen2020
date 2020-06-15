@@ -1,0 +1,16 @@
+{
+  "name": "library",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "author": "Hideki J.",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.14.4",
+    "graphql": "^15.1.0",
+    "nodemon": "^2.0.4"
+  }
+}
