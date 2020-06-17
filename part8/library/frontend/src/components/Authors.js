@@ -1,8 +1,9 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_AUTHORS } from '../queries'
+import BirthdayForm from './BirthdayForm'
 
-const Authors = ({ show }) => {
+const Authors = ({ show, setError }) => {
   const authors = useQuery(ALL_AUTHORS)
 
   if (!show) {
@@ -32,6 +33,7 @@ const Authors = ({ show }) => {
           ))}
         </tbody>
       </table>
+      <BirthdayForm setError={setError} />
     </div>
   )
 }
