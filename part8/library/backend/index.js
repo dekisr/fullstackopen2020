@@ -95,26 +95,38 @@ const resolvers = {
           }
         }
         case !!args.genre && !args.author: {
-          const books = await Book.find({
-            genres: { $in: [args.genre] },
-          }).populate('author')
-          return books.map(async (book) => {
-            const authorBooks = await Book.find({ author: book.author._id })
-            book.author.bookCount = authorBooks.length
-            return book
-          })
+          try {
+            const books = await Book.find({
+              genres: { $in: [args.genre] },
+            }).populate('author')
+            return books.map(async (book) => {
+              const authorBooks = await Book.find({ author: book.author._id })
+              book.author.bookCount = authorBooks.length
+              return book
+            })
+          } catch (error) {
+            throw new UserInputError(error.message, {
+              invalidArgs: args,
+            })
+          }
         }
         case !!args.genre && !!args.author: {
-          const author = await Author.findOne({ name: args.author })
-          const books = await Book.find({
-            author: author && author._id,
-            genres: { $in: [args.genre] },
-          }).populate('author')
-          return books.map(async (book) => {
-            const authorBooks = await Book.find({ author: book.author._id })
-            book.author.bookCount = authorBooks.length
-            return book
-          })
+          try {
+            const author = await Author.findOne({ name: args.author })
+            const books = await Book.find({
+              author: author && author._id,
+              genres: { $in: [args.genre] },
+            }).populate('author')
+            return books.map(async (book) => {
+              const authorBooks = await Book.find({ author: book.author._id })
+              book.author.bookCount = authorBooks.length
+              return book
+            })
+          } catch (error) {
+            throw new UserInputError(error.message, {
+              invalidArgs: args,
+            })
+          }
         }
         default:
           return await Book.find({}).populate('author')
@@ -158,14 +170,20 @@ const resolvers = {
       return book
     },
     editAuthor: async (root, args) => {
-      const author = await Author.findOne({ name: args.name })
-      if (!author) {
-        return null
+      try {
+        const author = await Author.findOne({ name: args.name })
+        if (!author) {
+          return null
+        }
+        author.born = args.setBornTo
+        await author.save()
+        const authorBooks = await Book.find({ author: author._id })
+        author.bookCount = authorBooks.length
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
       }
-      author.born = args.setBornTo
-      await author.save()
-      const authorBooks = await Book.find({ author: author._id })
-      author.bookCount = authorBooks.length
       return author
     },
   },
