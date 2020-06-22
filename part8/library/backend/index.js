@@ -218,14 +218,14 @@ const resolvers = {
         await author.save()
         book.author = author.id
         await book.save()
+        return Book.findOne({ title: args.title }).populate('author')
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
         })
       }
-      return book
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
       const currentUser = context.currentUser
       if (!currentUser) {
         throw new AuthenticationError('not authenticated')
@@ -239,12 +239,12 @@ const resolvers = {
         await author.save()
         const authorBooks = await Book.find({ author: author._id })
         author.bookCount = authorBooks.length
+        return author
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
         })
       }
-      return author
     },
   },
 }
