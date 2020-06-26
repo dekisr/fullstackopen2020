@@ -3,6 +3,7 @@ const {
   ApolloServer,
   UserInputError,
   AuthenticationError,
+  PubSub,
   gql,
 } = require('apollo-server')
 const mongoose = require('mongoose')
@@ -10,6 +11,7 @@ const jwt = require('jsonwebtoken')
 const Author = require('./models/author')
 const Book = require('./models/book')
 const User = require('./models/user')
+const pubsub = new PubSub()
 
 /*
  * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
@@ -73,6 +75,10 @@ const typeDefs = gql`
     editAuthor(name: String!, setBornTo: Int!): Author
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
+  }
+
+  type Subscription {
+    bookAdded: Book!
   }
 `
 
@@ -218,7 +224,10 @@ const resolvers = {
         await author.save()
         book.author = author.id
         await book.save()
-        return Book.findOne({ title: args.title }).populate('author')
+        await book.populate('author').execPopulate()
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
+        // return Book.findOne({ title: args.title }).populate('author')
+        return book
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
@@ -247,6 +256,11 @@ const resolvers = {
       }
     },
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED']),
+    },
+  },
 }
 
 const server = new ApolloServer({
@@ -262,6 +276,7 @@ const server = new ApolloServer({
   },
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
