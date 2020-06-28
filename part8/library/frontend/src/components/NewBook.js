@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
+import { ADD_BOOK, ALL_AUTHORS } from '../queries'
 
-const NewBook = ({ show, setError, token, setPage }) => {
+const NewBook = ({ show, setError, token, setPage, updateCacheWith }) => {
   const [title, setTitle] = useState('')
   const [author, setAuhtor] = useState('')
   const [published, setPublished] = useState('')
@@ -11,29 +11,32 @@ const NewBook = ({ show, setError, token, setPage }) => {
 
   const [addBook] = useMutation(ADD_BOOK, {
     refetchQueries: [{ query: ALL_AUTHORS }],
+    // update: (store, response) => {
+    //   const dataInStore = store.readQuery({ query: ALL_BOOKS })
+    //   store.writeQuery({
+    //     query: ALL_BOOKS,
+    //     data: {
+    //       ...dataInStore,
+    //       allBooks: [...dataInStore.allBooks, response.data.addBook],
+    //     },
+    //   })
+    //   for (const genre of genres) {
+    //     const dataInStore = store.readQuery({
+    //       query: ALL_BOOKS,
+    //       variables: { genre },
+    //     })
+    //     store.writeQuery({
+    //       query: ALL_BOOKS,
+    //       variables: { genre },
+    //       data: {
+    //         ...dataInStore,
+    //         allBooks: [...dataInStore.allBooks, response.data.addBook],
+    //       },
+    //     })
+    //   }
+    // },
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_BOOKS })
-      store.writeQuery({
-        query: ALL_BOOKS,
-        data: {
-          ...dataInStore,
-          allBooks: [...dataInStore.allBooks, response.data.addBook],
-        },
-      })
-      for (const genre of genres) {
-        const dataInStore = store.readQuery({
-          query: ALL_BOOKS,
-          variables: { genre },
-        })
-        store.writeQuery({
-          query: ALL_BOOKS,
-          variables: { genre },
-          data: {
-            ...dataInStore,
-            allBooks: [...dataInStore.allBooks, response.data.addBook],
-          },
-        })
-      }
+      updateCacheWith(response.data.addBook)
     },
     onCompleted: (data) => {
       setTitle('')

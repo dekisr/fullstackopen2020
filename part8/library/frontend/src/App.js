@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useApolloClient, useSubscription } from '@apollo/client'
-import { BOOK_ADDED } from './queries'
+import { useApolloClient, useSubscription, useQuery } from '@apollo/client'
+import { BOOK_ADDED, ALL_BOOKS, ALL_AUTHORS } from './queries'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import Recommended from './components/Recommended'
@@ -9,13 +9,47 @@ import LoginForm from './components/LoginForm'
 
 const App = () => {
   const client = useApolloClient()
+  const { refetch: refetchAuthors } = useQuery(ALL_AUTHORS)
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
   const [errorMessage, setErrorMessage] = useState(null)
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => set.map((p) => p.id).includes(object.id)
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: dataInStore.allBooks.concat(addedBook) },
+      })
+      // client.reFetchObservableQueries()
+      refetchAuthors()
+      for (const genre of addedBook.genres) {
+        try {
+          const dataInStore = client.readQuery({
+            query: ALL_BOOKS,
+            variables: { genre },
+          })
+          client.writeQuery({
+            query: ALL_BOOKS,
+            variables: { genre },
+            data: {
+              ...dataInStore,
+              allBooks: [...dataInStore.allBooks, addedBook],
+            },
+          })
+        } catch (error) {
+          console.log('no genre query to updated yet.')
+        }
+      }
+    }
+  }
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      notify(`New book "${subscriptionData.data.bookAdded.title}" was added.`)
+      const addedBook = subscriptionData.data.bookAdded
+      notify(`New book "${addedBook.title}" was added.`)
+      updateCacheWith(addedBook)
       console.log(subscriptionData)
     },
   })
@@ -60,6 +94,7 @@ const App = () => {
             setError={notify}
             token={token}
             setPage={setPage}
+            updateCacheWith={updateCacheWith}
           />
         </>
       )}
