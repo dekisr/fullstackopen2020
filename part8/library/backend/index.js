@@ -34,6 +34,7 @@ const typeDefs = gql`
   type Author {
     name: String!
     born: Int
+    booksIds: [String!]!
     bookCount: Int!
     id: ID!
   }
@@ -83,6 +84,11 @@ const typeDefs = gql`
 `
 
 const resolvers = {
+  Author: {
+    bookCount: (root) => {
+      return root.booksIds.length
+    }
+  },
   Query: {
     authorCount: () => Author.collection.countDocuments(),
     bookCount: () => Book.collection.countDocuments(),
@@ -110,10 +116,11 @@ const resolvers = {
             const books = await Book.find({
               author: author && author._id,
             }).populate('author')
-            return books.map((book) => {
-              book.author.bookCount = books.length
-              return book
-            })
+            // return books.map((book) => {
+            //   book.author.bookCount = books.length
+            //   return book
+            // })
+            return books
           } catch (error) {
             throw new UserInputError(error.message, {
               invalidArgs: args,
@@ -125,11 +132,12 @@ const resolvers = {
             const books = await Book.find({
               genres: { $in: [args.genre] },
             }).populate('author')
-            return books.map(async (book) => {
-              const authorBooks = await Book.find({ author: book.author._id })
-              book.author.bookCount = authorBooks.length
-              return book
-            })
+            // return books.map(async (book) => {
+            //   const authorBooks = await Book.find({ author: book.author._id })
+            //   book.author.bookCount = authorBooks.length
+            //   return book
+            // })
+            return books
           } catch (error) {
             throw new UserInputError(error.message, {
               invalidArgs: args,
@@ -143,11 +151,12 @@ const resolvers = {
               author: author && author._id,
               genres: { $in: [args.genre] },
             }).populate('author')
-            return books.map(async (book) => {
-              const authorBooks = await Book.find({ author: book.author._id })
-              book.author.bookCount = authorBooks.length
-              return book
-            })
+            // return books.map(async (book) => {
+            //   const authorBooks = await Book.find({ author: book.author._id })
+            //   book.author.bookCount = authorBooks.length
+            //   return book
+            // })
+            return books
           } catch (error) {
             throw new UserInputError(error.message, {
               invalidArgs: args,
@@ -161,11 +170,12 @@ const resolvers = {
     allAuthors: async () => {
       try {
         const authors = await Author.find({})
-        return authors.map(async (author) => {
-          const authorBooks = await Book.find({ author: author._id })
-          author.bookCount = authorBooks.length
-          return author
-        })
+        // return authors.map(async (author) => {
+        //   const authorBooks = await Book.find({ author: author._id })
+        //   author.bookCount = authorBooks.length
+        //   return author
+        // })
+        return authors
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
@@ -221,6 +231,7 @@ const resolvers = {
         const author =
           (await Author.findOne({ name: args.author })) ||
           new Author({ name: args.author })
+        author.booksIds = [...author.booksIds, book.id]
         await author.save()
         book.author = author.id
         await book.save()
@@ -246,8 +257,8 @@ const resolvers = {
         }
         author.born = args.setBornTo
         await author.save()
-        const authorBooks = await Book.find({ author: author._id })
-        author.bookCount = authorBooks.length
+        // const authorBooks = await Book.find({ author: author._id })
+        // author.bookCount = authorBooks.length
         return author
       } catch (error) {
         throw new UserInputError(error.message, {

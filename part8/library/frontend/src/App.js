@@ -39,7 +39,7 @@ const App = () => {
             },
           })
         } catch (error) {
-          console.log('no genre query to updated yet.')
+          console.log('no genre query to update yet.')
         }
       }
     }
