@@ -1,3 +1,25 @@
+interface BmiArguments {
+  height: number;
+  weight: number;
+}
+const error = (message: string): Error => { throw new Error(message); };
+const parseArguments = (args: Array<string>): BmiArguments => {
+  args.length !== 4 &&
+    error(
+      'Error:\n' +
+      'You should pass exactly two arguments.\n' +
+      'One for height and another for weight.'
+    );
+
+  (!isFinite(Number(args[2])) || !isFinite(Number(args[3]))) &&
+    error('Error:\nProvided values were not numbers!');
+
+  return {
+    height: Number(args[2]),
+    weight: Number(args[3])
+  };
+};
+
 type Result = string;
 const calculateBmi = (height: number, weight: number): Result => {
   height /= 100;
@@ -21,4 +43,10 @@ const calculateBmi = (height: number, weight: number): Result => {
       return 'Obese Class III (Very severely obese)';
   }
 };
-console.log(calculateBmi(180, 74));
+
+try {
+  const { height, weight } = parseArguments(process.argv);
+  console.log(calculateBmi(height, weight));
+} catch (error) {
+  console.log(error.message);
+}
