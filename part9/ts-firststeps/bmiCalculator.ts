@@ -1,3 +1,5 @@
+export { };
+
 interface BmiArguments {
   height: number;
   weight: number;
