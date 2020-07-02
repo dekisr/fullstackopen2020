@@ -44,11 +44,13 @@ const calculateBmi = (height: number, weight: number): Result => {
   }
 };
 
-try {
-  const { height, weight } = parseArguments(process.argv);
-  console.log(calculateBmi(height, weight));
-} catch (error) {
-  console.log((error as Error).message);
-}
+process.argv[1].includes('bmiCalculator.ts') && (() => {
+  try {
+    const { height, weight } = parseArguments(process.argv);
+    console.log(calculateBmi(height, weight));
+  } catch (error) {
+    console.log((error as Error).message);
+  }
+})();
 
 export default calculateBmi;

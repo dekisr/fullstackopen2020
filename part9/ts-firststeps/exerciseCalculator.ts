@@ -1,5 +1,3 @@
-export { };
-
 interface exercisesArguments {
   target: number;
   hoursPerDay: Array<number>;
@@ -20,6 +18,7 @@ const parseArguments = (args: Array<string>): exercisesArguments => {
     hoursPerDay:
       args
         .slice(3)
+        // invalid entries should be 0
         .map((hrs) => Number(hrs) > 0 ? Number(hrs) : 0)
   };
 };
@@ -48,16 +47,21 @@ const calculateExercises = (
     rating,
     ratingDescription:
       rating === 1 ? 'You did not reach the goal...' :
-        rating === 2 ? 'Good. Goal accomplished.' :
-          'Amazing! You exceeded the goal! ',
+      rating === 2 ? 'Good. Goal accomplished.' :
+      'Amazing! You exceeded the goal! ',
     target,
     average: Number(average.toFixed(2))
   };
 };
 
-try {
-  const { target, hoursPerDay } = parseArguments(process.argv);
-  console.log(calculateExercises(hoursPerDay, target));
-} catch (error) {
-  console.log((error as Error).message);
-}
+
+process.argv[1].includes('exerciseCalculator.ts') && (() => {
+  try {
+    const { target, hoursPerDay } = parseArguments(process.argv);
+    console.log(calculateExercises(hoursPerDay, target));
+  } catch (error) {
+    console.log((error as Error).message);
+  }
+})();
+
+export default calculateExercises;
