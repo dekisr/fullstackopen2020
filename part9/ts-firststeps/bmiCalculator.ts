@@ -1,5 +1,3 @@
-export { };
-
 interface BmiArguments {
   height: number;
   weight: number;
@@ -52,3 +50,5 @@ try {
 } catch (error) {
   console.log(error.message);
 }
+
+export default calculateBmi;
