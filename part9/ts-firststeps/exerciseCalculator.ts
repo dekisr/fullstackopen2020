@@ -59,5 +59,5 @@ try {
   const { target, hoursPerDay } = parseArguments(process.argv);
   console.log(calculateExercises(hoursPerDay, target));
 } catch (error) {
-  console.log(error.message);
+  console.log((error as Error).message);
 }

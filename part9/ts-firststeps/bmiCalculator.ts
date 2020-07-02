@@ -23,7 +23,7 @@ const parseArguments = (args: Array<string>): BmiArguments => {
 type Result = string;
 const calculateBmi = (height: number, weight: number): Result => {
   height /= 100;
-  const bmi: number = Number((weight / height ** 2).toFixed(2));
+  const bmi = Number((weight / height ** 2).toFixed(2));
   switch (true) {
     case bmi < 15:
       return 'Very severely underweight';
@@ -48,7 +48,7 @@ try {
   const { height, weight } = parseArguments(process.argv);
   console.log(calculateBmi(height, weight));
 } catch (error) {
-  console.log(error.message);
+  console.log((error as Error).message);
 }
 
 export default calculateBmi;
