@@ -8,5 +8,5 @@ const getDiagnoses = () => {
     return diagnoses_1.default;
 };
 exports.default = {
-    getDiagnoses
+    getDiagnoses,
 };
