@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { apiBaseUrl } from '../constants';
 import { Patient } from '../types';
 import { Container, Header, List, Icon } from 'semantic-ui-react';
-import { useStateValue } from '../state';
+import { useStateValue, updatePatient } from '../state';
 
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,7 +17,7 @@ const PatientPage: React.FC = () => {
           `${apiBaseUrl}/patients/${id}`
         );
         setPatient(patientFromApi);
-        dispatch({ type: 'UPDATE_PATIENT', payload: patientFromApi });
+        dispatch(updatePatient(patientFromApi));
       } catch (error) {
         console.log(error);
       }
