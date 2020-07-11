@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { apiBaseUrl } from '../constants';
-import { Patient } from '../types';
-import { Container, Header, List, Icon } from 'semantic-ui-react';
-import { useStateValue, updatePatient } from '../state';
+import { Patient, Diagnose } from '../types';
+import { Container, Header, List, Icon, ListItem } from 'semantic-ui-react';
+import { useStateValue, updatePatient, setDiagnosisData } from '../state';
 
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const [patient, setPatient] = useState<Patient | null>(null);
   React.useEffect(() => {
     const fetchPatient = async () => {
@@ -28,6 +28,19 @@ const PatientPage: React.FC = () => {
       fetchPatient();
     }
   }, [dispatch, patients, id]);
+  React.useEffect(() => {
+    const fetchDiagnoses = async () => {
+      try {
+        const { data: diagnosesFromApi } = await axios.get<Diagnose[]>(
+          `${apiBaseUrl}/diagnoses`
+        );
+        dispatch(setDiagnosisData(diagnosesFromApi));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    !Object.keys(diagnoses).length && fetchDiagnoses();
+  }, [dispatch, diagnoses]);
   return !patient ? null : (
     <Container>
       <Header as="h2">
@@ -50,6 +63,20 @@ const PatientPage: React.FC = () => {
           <strong>ocuupation:</strong> {patient?.occupation}
         </List.Item>
       </List>
+      <Header as="h3">entries</Header>
+      {patient?.entries.map((entry) => (
+        <div key={entry.id}>
+          <Header as="h4">{entry.date}</Header>
+          <p>{entry.description}</p>
+          <List>
+            {entry.diagnosisCodes?.map((code) => (
+              <ListItem key={code}>
+                <strong>{code}</strong> - {diagnoses[code]?.name}
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      ))}
     </Container>
   );
 };

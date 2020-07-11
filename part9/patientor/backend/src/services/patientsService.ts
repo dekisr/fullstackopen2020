@@ -15,10 +15,10 @@ const getPatients = (): Array<PatientNoSsn> => {
   );
 };
 
-const addPatient = (entry: NewPatient): Patient => {
+const addPatient = (patient: NewPatient): Patient => {
   const newPatient = {
     id: uuidv4(),
-    ...entry
+    ...patient
   };
   patients.push(newPatient);
   return newPatient;

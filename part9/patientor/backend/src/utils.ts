@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NewPatient, Gender } from './types';
+import { NewPatient, Gender, Entry } from './types';
 
 const isString = (text: any): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -45,6 +45,23 @@ const parseGender = (gender: any): Gender => {
   return gender;
 };
 
+// const isArray = (array: any): boolean => {
+//   return Array.isArray(array);
+// };
+const isEntryArray = (array: Array<any>): array is Array<Entry> => {
+  const entryType = ['HealthCheck', 'OccupationalHealthcare', 'Hospital'];
+  const test = array.map((entry) => entryType.includes(entry.type));
+  return !test.includes(false);
+};
+const parseEntries = (entries: any): Array<Entry> => {
+  if (!Array.isArray(entries) || !isEntryArray(entries)) {
+    throw new Error(`Incorrect or missing entries: ${entries as string}`);
+  } else if (!entries.length) {
+    return [];
+  }
+  return entries;
+};
+
 const toNewPatient = (object: any): NewPatient => {
   return {
     name: parseName(object.name),
@@ -52,7 +69,7 @@ const toNewPatient = (object: any): NewPatient => {
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation),
-    entries: []
+    entries: parseEntries(object.entries)
   };
 };
 
