@@ -37,11 +37,41 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         healthCheckRating: null
       }}
       onSubmit={onSubmit}
-      validate={(values) => {
-        const requiredError = 'Field is required';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      validate={(values: { [field: string]: any }) => {
+        let requiredFields: Array<string> = [
+          'description',
+          'date',
+          'specialist',
+          'type'
+        ];
+        switch (values.type) {
+          case 'Hospital': {
+            requiredFields = [
+              ...requiredFields,
+              'dischargeDate',
+              'dischargeCriteria'
+            ];
+            break;
+          }
+          default:
+            break;
+        }
+        console.log(requiredFields);
         const errors: { [field: string]: string } = {};
-        if (!values.date) {
-          errors.date = requiredError;
+        if (values.type === 'unselected') {
+          errors.type = 'You must select a type';
+        }
+        const regexDate = /^\d{4}[-/.](0?[1-9]|1[012])[-/.](0?[1-9]|[12][0-9]|3[01])$/;
+        for (const field of requiredFields) {
+          if (!values[field]) {
+            errors[field] = 'Field is required';
+          } else if (
+            (field === 'date' || field === 'dischargeDate') &&
+            !regexDate.test(values[field])
+          ) {
+            errors[field] = 'Invalid date (YYYY-MM-DD) (./-) (M/D)';
+          }
         }
         return errors;
       }}
@@ -57,7 +87,7 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
             />
             <Field
               label="Date"
-              placeholder="Date"
+              placeholder="YYYY-MM-DD"
               name="date"
               component={TextField}
             />
