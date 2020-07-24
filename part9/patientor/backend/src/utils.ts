@@ -66,10 +66,10 @@ const isEntryArray = (array: Array<any>): array is Array<Entry> => {
   return !test.includes(false);
 };
 const parseEntries = (entries: any): Array<Entry> => {
-  if (!Array.isArray(entries) || !isEntryArray(entries)) {
-    throw new Error(`Incorrect or missing entries: ${entries as string}`);
-  } else if (!entries.length) {
+  if (!entries || entries.length === 0) {
     return [];
+  } else if (!Array.isArray(entries) || !isEntryArray(entries)) {
+    throw new Error(`Incorrect or missing entries: ${entries as string}`);
   }
   return entries;
 };
@@ -140,11 +140,13 @@ const isDischarge = (object: any): object is Discharge => {
 const parseDischarge = (discharge: any): Discharge => {
   if (
     !discharge ||
+    !discharge.date ||
+    !discharge.criteria ||
     !isDischarge(discharge) ||
     !isDate(discharge.date) ||
     !isString(discharge.criteria)
   ) {
-    throw new Error(`Incorrect or missing Discharge: ${discharge as string}`);
+    throw new Error(`Incorrect or missing discharge info.`);
   }
   return discharge;
 };

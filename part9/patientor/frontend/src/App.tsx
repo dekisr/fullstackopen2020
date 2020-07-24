@@ -29,21 +29,21 @@ const App: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="App">
+    <main style={{ margin: '3rem auto 0 auto' }}>
       <Router>
         <Container>
           <Header as="h1">Patientor</Header>
           <Button as={Link} to="/" primary>
             Home
           </Button>
-          <Divider hidden />
+          <Divider />
           <Switch>
             <Route exact path="/" render={() => <PatientListPage />} />
             <Route path="/patients/:id" render={() => <PatientPage />} />
           </Switch>
         </Container>
       </Router>
-    </div>
+    </main>
   );
 };
 

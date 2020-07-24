@@ -2,15 +2,78 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { apiBaseUrl } from '../constants';
-import { Patient, Diagnose } from '../types';
-import { Container, Header, List, Icon, Card } from 'semantic-ui-react';
-import { useStateValue, updatePatient, setDiagnosisData } from '../state';
+import {
+  Patient,
+  Diagnose,
+  EntryType,
+  EntryFormValues,
+  FormValues,
+  Entry
+} from '../types';
+import {
+  Container,
+  Header,
+  List,
+  Icon,
+  Card,
+  Button,
+  Divider
+} from 'semantic-ui-react';
+import {
+  useStateValue,
+  updatePatient,
+  setDiagnosisData,
+  addEntry
+} from '../state';
 import EntryDetails from '../EntryDetail';
+import { AddEntryModal } from '../AddModal';
 
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [{ patients, diagnoses }, dispatch] = useStateValue();
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
+
+  const openModal = (): void => setModalOpen(true);
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewEntry = async (values: FormValues) => {
+    console.log(values);
+    const entry = { ...values } as EntryFormValues;
+    switch (entry.type) {
+      case EntryType.Hospital: {
+        entry.discharge = {
+          date: entry.dischargeDate,
+          criteria: entry.dischargeCriteria
+        };
+        delete entry.dischargeDate;
+        delete entry.dischargeCriteria;
+        delete entry.employerName;
+        delete entry.sickLeave;
+        delete entry.healthCheckRating;
+        break;
+      }
+      default:
+        break;
+    }
+
+    try {
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        entry
+      );
+      closeModal();
+      dispatch(addEntry(id, newEntry));
+    } catch (error) {
+      console.error(error.response.data);
+      setError(error.response.data);
+    }
+  };
+
   React.useEffect(() => {
     const fetchPatient = async () => {
       try {
@@ -70,6 +133,20 @@ const PatientPage: React.FC = () => {
           <EntryDetails entry={entry} key={entry.id} />
         ))}
       </Card.Group>
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        error={error}
+        onClose={closeModal}
+      />
+      <Divider />
+      <Button
+        content="Add New Entry"
+        color="teal"
+        icon="add"
+        labelPosition="left"
+        onClick={() => openModal()}
+      />
     </Container>
   );
 };

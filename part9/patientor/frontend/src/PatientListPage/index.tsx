@@ -2,9 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import { Container, Table, Button } from 'semantic-ui-react';
 
-import { PatientFormValues } from '../AddPatientModal/AddPatientForm';
-import AddPatientModal from '../AddPatientModal';
-import { Patient } from '../types';
+import { AddPatientModal } from '../AddModal';
+import { Patient, FormValues } from '../types';
 import { apiBaseUrl } from '../constants';
 import HealthRatingBar from '../components/HealthRatingBar';
 import { useStateValue, addPatient } from '../state';
@@ -23,7 +22,8 @@ const PatientListPage: React.FC = () => {
     setError(undefined);
   };
 
-  const submitNewPatient = async (values: PatientFormValues) => {
+  const submitNewPatient = async (values: FormValues) => {
+    console.log(values);
     try {
       const { data: newPatient } = await axios.post<Patient>(
         `${apiBaseUrl}/patients`,
@@ -33,13 +33,13 @@ const PatientListPage: React.FC = () => {
       closeModal();
     } catch (e) {
       console.error(e.response.data);
-      setError(e.response.data.error);
+      setError(e.response.data);
     }
   };
 
   return (
     <div className="App">
-      <Container textAlign="center">
+      <Container textAlign="right">
         <h3>Patient list</h3>
       </Container>
       <Table celled>
@@ -72,7 +72,13 @@ const PatientListPage: React.FC = () => {
         error={error}
         onClose={closeModal}
       />
-      <Button onClick={() => openModal()}>Add New Patient</Button>
+      <Button
+        content="Add New Patient"
+        color="teal"
+        icon="add"
+        labelPosition="left"
+        onClick={() => openModal()}
+      />
     </div>
   );
 };

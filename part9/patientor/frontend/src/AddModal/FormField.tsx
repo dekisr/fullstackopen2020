@@ -1,37 +1,61 @@
-import React from "react";
-import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
-import { Dropdown, DropdownProps, Form } from "semantic-ui-react";
-import { Diagnose, Gender } from "../types";
+import React from 'react';
+import {
+  ErrorMessage,
+  Field,
+  FieldProps,
+  FormikProps,
+  useFormikContext
+} from 'formik';
+import { Dropdown, DropdownProps, Form } from 'semantic-ui-react';
+import { Diagnose, Gender, EntryType } from '../types';
 
 // structure of a single option
 export type GenderOption = {
   value: Gender;
   label: string;
 };
+export type TypeOption = {
+  value: EntryType;
+  label: string;
+};
 
 // props for select field component
-type SelectFieldProps = {
+interface SelectFieldProps {
   name: string;
   label: string;
-  options: GenderOption[];
-};
+  options: (GenderOption | TypeOption)[];
+}
 
 export const SelectField: React.FC<SelectFieldProps> = ({
   name,
   label,
   options
-}: SelectFieldProps) => (
-  <Form.Field>
-    <label>{label}</label>
-    <Field as="select" name={name} className="ui dropdown">
-      {options.map(option => (
-        <option key={option.value} value={option.value}>
-          {option.label || option.value}
+}: SelectFieldProps) => {
+  const { handleChange } = useFormikContext();
+  return (
+    <Form.Field>
+      <label>{label}</label>
+      <Field
+        as="select"
+        name={name}
+        className="ui dropdown"
+        onChange={handleChange}
+      >
+        <option value="unselected" disabled>
+          Select an option:
         </option>
-      ))}
-    </Field>
-  </Form.Field>
-);
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label || option.value}
+          </option>
+        ))}
+      </Field>
+      <div style={{ color: 'red' }}>
+        <ErrorMessage name={name} />
+      </div>
+    </Form.Field>
+  );
+};
 
 interface TextProps extends FieldProps {
   label: string;
@@ -46,7 +70,7 @@ export const TextField: React.FC<TextProps> = ({
   <Form.Field>
     <label>{label}</label>
     <Field placeholder={placeholder} {...field} />
-    <div style={{ color:'red' }}>
+    <div style={{ color: 'red' }}>
       <ErrorMessage name={field.name} />
     </div>
   </Form.Field>
@@ -62,12 +86,17 @@ interface NumberProps extends FieldProps {
   max: number;
 }
 
-export const NumberField: React.FC<NumberProps> = ({ field, label, min, max }) => (
+export const NumberField: React.FC<NumberProps> = ({
+  field,
+  label,
+  min,
+  max
+}) => (
   <Form.Field>
     <label>{label}</label>
-    <Field {...field} type='number' min={min} max={max} />
+    <Field {...field} type="number" min={min} max={max} />
 
-    <div style={{ color:'red' }}>
+    <div style={{ color: 'red' }}>
       <ErrorMessage name={field.name} />
     </div>
   </Form.Field>
@@ -79,10 +108,10 @@ export const DiagnosisSelection = ({
   setFieldTouched
 }: {
   diagnoses: Diagnose[];
-  setFieldValue: FormikProps<{ diagnosisCodes: string[] }>["setFieldValue"];
-  setFieldTouched: FormikProps<{ diagnosisCodes: string[] }>["setFieldTouched"];
+  setFieldValue: FormikProps<{ diagnosisCodes: string[] }>['setFieldValue'];
+  setFieldTouched: FormikProps<{ diagnosisCodes: string[] }>['setFieldTouched'];
 }) => {
-  const field = "diagnosisCodes";
+  const field = 'diagnosisCodes';
   const onChange = (
     _event: React.SyntheticEvent<HTMLElement, Event>,
     data: DropdownProps
@@ -91,7 +120,7 @@ export const DiagnosisSelection = ({
     setFieldValue(field, data.value);
   };
 
-  const stateOptions = diagnoses.map(diagnosis => ({
+  const stateOptions = diagnoses.map((diagnosis) => ({
     key: diagnosis.code,
     text: `${diagnosis.name} (${diagnosis.code})`,
     value: diagnosis.code

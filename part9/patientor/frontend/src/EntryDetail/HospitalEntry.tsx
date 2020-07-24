@@ -14,6 +14,21 @@ const HospitalEntry: React.FC<{ entry: HospitalEntryType }> = ({ entry }) => {
         </Card.Header>
         <Card.Description>{entry.description}</Card.Description>
       </Card.Content>
+      <Card.Content>
+        <p>
+          <strong>Discharge</strong>
+        </p>
+        <Card.Description>
+          <p>
+            <strong>Date: </strong>
+            {entry.discharge.date}
+          </p>
+          <p>
+            <strong>Criteria: </strong>
+            {entry.discharge.criteria}
+          </p>
+        </Card.Description>
+      </Card.Content>
       {entry.diagnosisCodes?.map((code) => (
         <Card.Content extra key={code}>
           <p>
