@@ -8,14 +8,37 @@ const OccupationalHealthcareEntry: React.FC<{
 }> = ({ entry }) => {
   const [{ diagnoses }] = useStateValue();
   return (
-    <Card>
-      <Card.Content>
+    <Card style={{ flexGrow: '1' }}>
+      <Card.Content style={{ flexGrow: '0' }}>
         <Card.Header>
           <Icon name="doctor" size="large" />
           {entry.date}
         </Card.Header>
         <Card.Description>{entry.description}</Card.Description>
       </Card.Content>
+      <Card.Content style={{ flexGrow: entry.sickLeave ? '0' : '1' }}>
+        <p>
+          <strong>Employer name: </strong>
+          {entry.employerName}
+        </p>
+      </Card.Content>
+      {(entry.sickLeave?.startDate || entry.sickLeave?.endDate) && (
+        <Card.Content>
+          <p>
+            <strong>Sick Leave</strong>
+          </p>
+          <Card.Description>
+            <p>
+              <strong>start date: </strong>
+              {entry.sickLeave?.startDate || '---------------'}
+            </p>
+            <p>
+              <strong>end date: </strong>
+              {entry.sickLeave?.endDate || '---------------'}
+            </p>
+          </Card.Description>
+        </Card.Content>
+      )}
       {entry.diagnosisCodes?.map((code) => (
         <Card.Content extra key={code}>
           <p>

@@ -8,7 +8,7 @@ const HealthCheckEntry: React.FC<{ entry: HealthCheckEntryType }> = ({
 }) => {
   const [{ diagnoses }] = useStateValue();
   return (
-    <Card>
+    <Card style={{ flexGrow: '1' }}>
       <Card.Content>
         <Card.Header>
           <Icon name="heartbeat" size="large" />

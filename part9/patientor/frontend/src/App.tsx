@@ -29,7 +29,7 @@ const App: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <main style={{ margin: '3rem auto 0 auto' }}>
+    <main style={{ margin: '3rem auto' }}>
       <Router>
         <Container>
           <Header as="h1">Patientor</Header>

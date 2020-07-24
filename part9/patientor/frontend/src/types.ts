@@ -86,7 +86,9 @@ export type EntryFormValues = {
   dischargeDate: string;
   dischargeCriteria: string;
   employerName: string;
-  sickLeave?: SickLeave | null;
+  sickLeave?: SickLeave;
+  sickLeaveStartDate: string;
+  sickLeaveEndDate: string;
   healthCheckRating?: HealthCheckRating | null;
 };
 export type PatientFormValues = {

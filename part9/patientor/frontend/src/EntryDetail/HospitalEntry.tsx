@@ -6,8 +6,8 @@ import { useStateValue } from '../state';
 const HospitalEntry: React.FC<{ entry: HospitalEntryType }> = ({ entry }) => {
   const [{ diagnoses }] = useStateValue();
   return (
-    <Card>
-      <Card.Content>
+    <Card style={{ flexGrow: '1' }}>
+      <Card.Content style={{ flexGrow: '0' }}>
         <Card.Header>
           <Icon name="medkit" size="large" />
           {entry.date}

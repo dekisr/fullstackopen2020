@@ -33,12 +33,15 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         dischargeDate: '',
         dischargeCriteria: '',
         employerName: '',
-        sickLeave: null,
+        sickLeaveStartDate: '',
+        sickLeaveEndDate: '',
         healthCheckRating: null
       }}
       onSubmit={onSubmit}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       validate={(values: { [field: string]: any }) => {
+        const errors: { [field: string]: string } = {};
+        const regexDate = /^\d{4}[-/.](0?[1-9]|1[012])[-/.](0?[1-9]|[12][0-9]|3[01])$/;
         let requiredFields: Array<string> = [
           'description',
           'date',
@@ -54,15 +57,21 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
             ];
             break;
           }
-          default:
+          case 'OccupationalHealthcare': {
+            requiredFields = [...requiredFields, 'employerName'];
+            const optionalFields = ['sickLeaveStartDate', 'sickLeaveEndDate'];
+            for (const field of optionalFields) {
+              if (values[field] && !regexDate.test(values[field])) {
+                errors[field] = 'Invalid date (YYYY-MM-DD) (./-) (M/D)';
+              }
+            }
             break;
+          }
+          default: {
+            errors.type = 'You must select a type';
+            break;
+          }
         }
-        console.log(requiredFields);
-        const errors: { [field: string]: string } = {};
-        if (values.type === 'unselected') {
-          errors.type = 'You must select a type';
-        }
-        const regexDate = /^\d{4}[-/.](0?[1-9]|1[012])[-/.](0?[1-9]|[12][0-9]|3[01])$/;
         for (const field of requiredFields) {
           if (!values[field]) {
             errors[field] = 'Field is required';
@@ -115,6 +124,28 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                   label="Discharge Criteria"
                   placeholder="Discharge Criteria"
                   name="dischargeCriteria"
+                  component={TextField}
+                />
+              </>
+            )}
+            {values.type === 'OccupationalHealthcare' && (
+              <>
+                <Field
+                  label="Employer Name"
+                  placeholder="Employer Name"
+                  name="employerName"
+                  component={TextField}
+                />
+                <Field
+                  label="Sick Leave Start Date"
+                  placeholder="YYYY-MM-DD"
+                  name="sickLeaveStartDate"
+                  component={TextField}
+                />
+                <Field
+                  label="Sick Leave End Date"
+                  placeholder="YYYY-MM-DD"
+                  name="sickLeaveEndDate"
                   component={TextField}
                 />
               </>

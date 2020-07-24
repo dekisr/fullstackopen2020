@@ -50,17 +50,27 @@ const PatientPage: React.FC = () => {
           date: entry.dischargeDate,
           criteria: entry.dischargeCriteria
         };
-        delete entry.dischargeDate;
-        delete entry.dischargeCriteria;
         delete entry.employerName;
-        delete entry.sickLeave;
+        delete entry.healthCheckRating;
+        break;
+      }
+      case EntryType.OccupationalHealthcare: {
+        if (!!entry.sickLeaveStartDate || !!entry.sickLeaveEndDate) {
+          entry.sickLeave = {
+            startDate: entry.sickLeaveStartDate,
+            endDate: entry.sickLeaveEndDate
+          };
+        }
         delete entry.healthCheckRating;
         break;
       }
       default:
         break;
     }
-
+    delete entry.dischargeDate;
+    delete entry.dischargeCriteria;
+    delete entry.sickLeaveStartDate;
+    delete entry.sickLeaveEndDate;
     try {
       const { data: newEntry } = await axios.post<Entry>(
         `${apiBaseUrl}/patients/${id}/entries`,
@@ -106,7 +116,7 @@ const PatientPage: React.FC = () => {
     !Object.keys(diagnoses).length && fetchDiagnoses();
   }, [dispatch, diagnoses]);
   return !patient ? null : (
-    <Container>
+    <Container fluid>
       <Header as="h2">
         {patient?.name}{' '}
         <Icon

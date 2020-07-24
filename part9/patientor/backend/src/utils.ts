@@ -168,10 +168,10 @@ const parseSickLeave = (sickleave: any): SickLeave => {
   if (
     !sickleave ||
     !isSickLeave(sickleave) ||
-    !isDate(sickleave.startDate) ||
-    !isDate(sickleave.endDate)
+    (sickleave.startDate && !isDate(sickleave.startDate)) ||
+    (sickleave.endDate && !isDate(sickleave.endDate))
   ) {
-    throw new Error(`Incorrect or missing SickLeave: ${sickleave as string}`);
+    throw new Error(`Incorrect or missing Sick Leave: ${sickleave as string}`);
   }
   return sickleave;
 };

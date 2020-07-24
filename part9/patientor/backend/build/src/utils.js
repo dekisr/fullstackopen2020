@@ -143,9 +143,9 @@ const isSickLeave = (object) => {
 const parseSickLeave = (sickleave) => {
     if (!sickleave ||
         !isSickLeave(sickleave) ||
-        !isDate(sickleave.startDate) ||
-        !isDate(sickleave.endDate)) {
-        throw new Error(`Incorrect or missing SickLeave: ${sickleave}`);
+        (sickleave.startDate && !isDate(sickleave.startDate)) ||
+        (sickleave.endDate && !isDate(sickleave.endDate))) {
+        throw new Error(`Incorrect or missing Sick Leave: ${sickleave}`);
     }
     return sickleave;
 };
