@@ -5,7 +5,8 @@ import {
   TextField,
   DiagnosisSelection,
   SelectField,
-  TypeOption
+  TypeOption,
+  NumberField
 } from './FormField';
 import { EntryType, EntryFormValues } from '../types';
 import { useStateValue } from '../state';
@@ -35,7 +36,7 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         employerName: '',
         sickLeaveStartDate: '',
         sickLeaveEndDate: '',
-        healthCheckRating: null
+        healthCheckRating: ''
       }}
       onSubmit={onSubmit}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,13 +68,24 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
             }
             break;
           }
+          case 'HealthCheck': {
+            requiredFields = [...requiredFields, 'healthCheckRating'];
+            const regexHR = /^[0-3]$/m;
+            if (
+              values.healthCheckRating &&
+              !regexHR.test(values.healthCheckRating)
+            ) {
+              errors.healthCheckRating = 'Invalid Health Check Rating Number';
+            }
+            break;
+          }
           default: {
             errors.type = 'You must select a type';
             break;
           }
         }
         for (const field of requiredFields) {
-          if (!values[field]) {
+          if (!values[field] && values[field] !== 0) {
             errors[field] = 'Field is required';
           } else if (
             (field === 'date' || field === 'dischargeDate') &&
@@ -147,6 +159,18 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                   placeholder="YYYY-MM-DD"
                   name="sickLeaveEndDate"
                   component={TextField}
+                />
+              </>
+            )}
+            {values.type === 'HealthCheck' && (
+              <>
+                <Field
+                  label="Health Check Rating"
+                  placeholder="Rating (0~3)"
+                  name="healthCheckRating"
+                  component={NumberField}
+                  min={0}
+                  max={3}
                 />
               </>
             )}

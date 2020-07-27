@@ -89,7 +89,7 @@ export type EntryFormValues = {
   sickLeave?: SickLeave;
   sickLeaveStartDate: string;
   sickLeaveEndDate: string;
-  healthCheckRating?: HealthCheckRating | null;
+  healthCheckRating?: HealthCheckRating | string;
 };
 export type PatientFormValues = {
   name: string;

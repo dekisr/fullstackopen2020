@@ -180,7 +180,7 @@ const isHealthCheckRating = (param: any): param is HealthCheckRating => {
   return Object.values(HealthCheckRating).includes(param);
 };
 const parseHealthCheckRating = (rating: any): HealthCheckRating => {
-  if (!rating || !isHealthCheckRating(rating)) {
+  if ((!rating && rating !== 0) || !isHealthCheckRating(rating)) {
     throw new Error(
       `Incorrect or missing health check rating: ${rating as string}`
     );

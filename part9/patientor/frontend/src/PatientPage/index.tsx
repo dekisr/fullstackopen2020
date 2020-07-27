@@ -64,6 +64,10 @@ const PatientPage: React.FC = () => {
         delete entry.healthCheckRating;
         break;
       }
+      case EntryType.HealthCheck: {
+        delete entry.employerName;
+        break;
+      }
       default:
         break;
     }
@@ -77,6 +81,7 @@ const PatientPage: React.FC = () => {
         entry
       );
       closeModal();
+      console.log('what?', entry);
       dispatch(addEntry(id, newEntry));
     } catch (error) {
       console.error(error.response.data);

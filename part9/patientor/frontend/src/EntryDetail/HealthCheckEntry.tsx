@@ -15,6 +15,11 @@ const HealthCheckEntry: React.FC<{ entry: HealthCheckEntryType }> = ({
           {entry.date}
         </Card.Header>
         <Card.Description>{entry.description}</Card.Description>
+        <Card.Description>
+          <em>
+            <strong>{entry.specialist}</strong>
+          </em>
+        </Card.Description>
       </Card.Content>
       {entry.healthCheckRating >= 0 && (
         <Card.Content extra>
