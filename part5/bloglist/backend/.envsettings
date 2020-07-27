@@ -1,0 +1,5 @@
+If you want to test this project, don't forget to set the .env file with these variables.
+MONGODB_URI = your_mongodb_uri
+TEST_MONGODB_URI = your_mongodb_test_database_uri
+SECRET = your_secret_for_JWT_tokens
+PORT = your_chosen_port
